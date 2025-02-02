@@ -100,8 +100,6 @@ class OAuth2Client
             throw new OAuth2ClientException('SATUSEHAT environment defined as PROD, but CLIENTID_PROD / CLIENTSECRET_PROD / ORGID_PROD not set');
         }
 
-        $this->base_url = $this->override ? null : $this->base_url;
-
         $authEndpoint = getenv('SATUSEHAT_AUTH_ENDPOINT') ?: '/oauth2/v1';
         $fhirEndpoint = getenv('SATUSEHAT_FHIR_ENDPOINT') ?: '/fhir-r4/v1';
 
