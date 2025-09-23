@@ -15,7 +15,6 @@ return [
     'kode_wilayah_indonesia_table_name' => 'kode_wilayah_indonesia',
     'profile_fasyankes_name' => 'satusehat_profile_fasyankes',
 
-
     /*
      * Override the SATUSEHAT environment, organization, ClientID, and ClientSecret to use
      * non environment variable

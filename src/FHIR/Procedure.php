@@ -10,17 +10,15 @@ class Procedure extends OAuth2Client
 {
     public array $procedure = ['resourceType' => 'Procedure'];
 
-
     public function addCode($code = null, $display = null)
     {
         $code_check = Icd9::where('icd9_code', $code)->first();
 
         if (! $code_check) {
-            throw new FHIRException('Kode ICD 9 (' . $code . ') tidak ditemukan');
+            throw new FHIRException('Kode ICD 9 ('.$code.') tidak ditemukan');
         }
 
         $display = $display ? $display : $code_check->icd9_display;
-
 
         $this->procedure['code']['coding'][] = [
             'system' => 'http://hl7.org/fhir/sid/icd-9-cm',
@@ -33,7 +31,7 @@ class Procedure extends OAuth2Client
     {
         $this->procedure['performer'][] = [
             'actor' => [
-                'reference' => 'Practitioner/' . $practitionerId,
+                'reference' => 'Practitioner/'.$practitionerId,
                 'display' => $name,
             ],
         ];
@@ -74,16 +72,15 @@ class Procedure extends OAuth2Client
 
     public function setSubject($subjectId, $name)
     {
-        $this->procedure['subject']['reference'] = 'Patient/' . $subjectId;
+        $this->procedure['subject']['reference'] = 'Patient/'.$subjectId;
         $this->procedure['subject']['display'] = $name;
     }
 
     public function setEncounter($encounterId, $display = null, $bundle = false)
     {
-        $this->procedure['encounter']['reference'] = ($bundle ? 'urn:uuid:' : 'Encounter/') . $encounterId;
-        $this->procedure['encounter']['display'] = $display ? $display : 'Kunjungan ' . $encounterId;
+        $this->procedure['encounter']['reference'] = ($bundle ? 'urn:uuid:' : 'Encounter/').$encounterId;
+        $this->procedure['encounter']['display'] = $display ? $display : 'Kunjungan '.$encounterId;
     }
-
 
     public function json()
     {
