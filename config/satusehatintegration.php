@@ -10,8 +10,11 @@ return [
     'token_table_name' => 'satusehat_token',
 
     'icd10_table_name' => 'satusehat_icd10',
+    'icd9_table_name' => 'satusehat_icd9',
 
     'kode_wilayah_indonesia_table_name' => 'kode_wilayah_indonesia',
+    'profile_fasyankes_name' => 'satusehat_profile_fasyankes',
+
 
     /*
      * Override the SATUSEHAT environment, organization, ClientID, and ClientSecret to use
