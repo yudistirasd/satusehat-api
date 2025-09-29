@@ -2,7 +2,6 @@
 
 namespace Satusehat\Integration\FHIR;
 
-use Illuminate\Support\Str;
 use Satusehat\Integration\Exception\FHIR\FHIRException;
 use Satusehat\Integration\Helper\Uuid;
 use Satusehat\Integration\OAuth2Client;
@@ -27,7 +26,7 @@ class MedicationRequest extends OAuth2Client
     public function setContained(Medication $medication)
     {
         if (empty($medication)) {
-            throw new FHIRException("Parameter medication is required");
+            throw new FHIRException('Parameter medication is required');
         }
 
         // convert to array from json
@@ -105,28 +104,28 @@ class MedicationRequest extends OAuth2Client
     public function setDispenseRequest($dispenseInterval = [], $validityPeriod = [], $numberOfRepeatsAllowed = 0, $quantity = [], $expectedSupplyDuration = [])
     {
 
-        if (!empty($dispenseInterval)) {
+        if (! empty($dispenseInterval)) {
             $this->medicationRequest['dispenseRequest']['dispenseInterval'] = $dispenseInterval;
         }
 
-        if (!empty($validityPeriod)) {
+        if (! empty($validityPeriod)) {
             $this->medicationRequest['dispenseRequest']['validityPeriod'] = $validityPeriod;
         }
 
-        if (!empty($numberOfRepeatsAllowed)) {
+        if (! empty($numberOfRepeatsAllowed)) {
             $this->medicationRequest['dispenseRequest']['numberOfRepeatsAllowed'] = $numberOfRepeatsAllowed;
         }
 
-        if (!empty($quantity)) {
+        if (! empty($quantity)) {
             $this->medicationRequest['dispenseRequest']['quantity'] = $quantity;
         }
 
-        if (!empty($expectedSupplyDuration)) {
+        if (! empty($expectedSupplyDuration)) {
             $this->medicationRequest['dispenseRequest']['expectedSupplyDuration'] = $expectedSupplyDuration;
         }
 
         $this->medicationRequest['dispenseRequest']['performer'] = [
-            'reference' => 'Organization/' . $this->organization_id
+            'reference' => 'Organization/'.$this->organization_id,
         ];
     }
 

@@ -7,7 +7,6 @@ class Uuid
     /**
      * Generate UUID v4 (random-based).
      *
-     * @return string
      * @throws \Exception
      */
     public static function generateV4(): string
@@ -15,10 +14,10 @@ class Uuid
         $data = random_bytes(16);
 
         // Set versi ke 4 (0100xxxx)
-        $data[6] = chr((ord($data[6]) & 0x0f) | 0x40);
+        $data[6] = chr((ord($data[6]) & 0x0F) | 0x40);
 
         // Set variant ke RFC 4122 (10xxxxxx)
-        $data[8] = chr((ord($data[8]) & 0x3f) | 0x80);
+        $data[8] = chr((ord($data[8]) & 0x3F) | 0x80);
 
         $hex = bin2hex($data);
 
