@@ -2,7 +2,6 @@
 
 namespace Satusehat\Integration\FHIR;
 
-use Illuminate\Support\Str;
 use Satusehat\Integration\Exception\FHIR\FHIRException;
 use Satusehat\Integration\OAuth2Client;
 
@@ -17,25 +16,25 @@ class Medication extends OAuth2Client
         ],
         'extension' => [
             [
-                "url" => "https://fhir.kemkes.go.id/r4/StructureDefinition/MedicationType",
-                "valueCodeableConcept" => [
-                    "coding" => [
+                'url' => 'https://fhir.kemkes.go.id/r4/StructureDefinition/MedicationType',
+                'valueCodeableConcept' => [
+                    'coding' => [
                         [
-                            "system" => "http://terminology.kemkes.go.id/CodeSystem/medication-type",
-                            "code" => "NC",
-                            "display" => "Non-compound"
+                            'system' => 'http://terminology.kemkes.go.id/CodeSystem/medication-type',
+                            'code' => 'NC',
+                            'display' => 'Non-compound',
 
-                        ]
-                    ]
-                ]
-            ]
-        ]
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ];
 
     public function setIdentifier($identifier)
     {
         $this->medication['identifier'][] = [
-            'system' => 'http://sys-ids.kemkes.go.id/medication/' . $this->organization_id,
+            'system' => 'http://sys-ids.kemkes.go.id/medication/'.$this->organization_id,
             'value' => $identifier,
         ];
     }
@@ -44,8 +43,8 @@ class Medication extends OAuth2Client
     {
         $statusAvailable = ['active', 'inactive', 'entered-in-error'];
 
-        if (!in_array($status, $statusAvailable)) {
-            $statusAvailableString = implode(",", $statusAvailable);
+        if (! in_array($status, $statusAvailable)) {
+            $statusAvailableString = implode(',', $statusAvailable);
 
             throw new FHIRException("Medication status berdasarkan http://hl7.org/fhir/codesystem-medication-status.html adalah : {$statusAvailableString}");
         }
@@ -77,9 +76,10 @@ class Medication extends OAuth2Client
 
     public function getPayload($key = null)
     {
-        if (!empty($key)) {
+        if (! empty($key)) {
             return $this->medication[$key];
         }
+
         return $this->medication;
     }
 
