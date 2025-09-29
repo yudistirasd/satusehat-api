@@ -4,6 +4,7 @@ namespace Satusehat\Integration\FHIR;
 
 use Illuminate\Support\Str;
 use Satusehat\Integration\Exception\FHIR\FHIRException;
+use Satusehat\Integration\Helper\Uuid;
 use Satusehat\Integration\OAuth2Client;
 
 class MedicationRequest extends OAuth2Client
@@ -23,9 +24,16 @@ class MedicationRequest extends OAuth2Client
         ]
     ];
 
-    public function setContained($medication)
+    public function setContained(Medication $medication)
     {
-        $medication['id'] = Str::uuid();
+        if (empty($medication)) {
+            throw new FHIRException("Parameter medication is required");
+        }
+
+        // convert to array from json
+        $medication = $medication->toArray();
+        $medication['id'] = Uuid::generateV4();
+
         $this->medicationRequest['contained'][] = $medication;
     }
 
@@ -94,6 +102,34 @@ class MedicationRequest extends OAuth2Client
         $this->medicationRequest['authoredOn'] = $authoredOn;
     }
 
+    public function setDispenseRequest($dispenseInterval = [], $validityPeriod = [], $numberOfRepeatsAllowed = 0, $quantity = [], $expectedSupplyDuration = [])
+    {
+
+        if (!empty($dispenseInterval)) {
+            $this->medicationRequest['dispenseRequest']['dispenseInterval'] = $dispenseInterval;
+        }
+
+        if (!empty($validityPeriod)) {
+            $this->medicationRequest['dispenseRequest']['validityPeriod'] = $validityPeriod;
+        }
+
+        if (!empty($numberOfRepeatsAllowed)) {
+            $this->medicationRequest['dispenseRequest']['numberOfRepeatsAllowed'] = $numberOfRepeatsAllowed;
+        }
+
+        if (!empty($quantity)) {
+            $this->medicationRequest['dispenseRequest']['quantity'] = $quantity;
+        }
+
+        if (!empty($expectedSupplyDuration)) {
+            $this->medicationRequest['dispenseRequest']['expectedSupplyDuration'] = $expectedSupplyDuration;
+        }
+
+        $this->medicationRequest['dispenseRequest']['performer'] = [
+            'reference' => 'Organization/' . $this->organization_id
+        ];
+    }
+
     public function json()
     {
         // auto replace reference based on contained medication id
@@ -102,6 +138,11 @@ class MedicationRequest extends OAuth2Client
         }
 
         return json_encode($this->medicationRequest, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    }
+
+    public function toArray()
+    {
+        return $this->medicationRequest;
     }
 
     public function post()

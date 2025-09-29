@@ -88,6 +88,11 @@ class Medication extends OAuth2Client
         return json_encode($this->medication, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
     }
 
+    public function toArray()
+    {
+        return $this->medication;
+    }
+
     public function post()
     {
         $payload = $this->json();
