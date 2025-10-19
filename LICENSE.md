@@ -1,6 +1,8 @@
 The MIT License (MIT)
 
-Copyright (c) ivanwilliammd <ivanwilliam.md@gmail.com>
+Copyright (c) 2025 Yudistira SD
+
+Based on original work by ivanwilliammd <ivanwilliam.md@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
