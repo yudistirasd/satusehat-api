@@ -1,16 +1,19 @@
 {
-    "name": "ivanwilliammd/satusehat-integration",
-    "description": "Build SATUSEHAT FHIR Object in Easy Way",
+    "name": "yudistira/satusehat-api",
+    "description": "Non Official SATUSEHAT API with FHIR Object in Easy Way",
     "keywords": [
-        "ivanwilliammd",
-        "satusehat-integration"
+        "yudistirasd",
+        "satusehat",
+        "satusehat-api",
+        "rest-api",
+        "satusehat-rest-api"
     ],
-    "homepage": "https://github.com/ivanwilliammd/satusehat-integration",
+    "homepage": "https://github.com/yudistirasd/satusehat-api",
     "license": "MIT",
     "authors": [
         {
-            "name": "ivanwilliammd",
-            "email": "ivanwilliam.md@gmail.com",
+            "name": "yudistirasd",
+            "email": "yudistira.sd2@gmail.com",
             "role": "Developer"
         }
     ],
