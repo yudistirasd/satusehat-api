@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0 - 2025-10-19
+
+**Full Changelog**: https://github.com/yudistirasd/satusehat-api/commits/1.0
+
 ## 3.1.0-stable - 2025-02-25
 
 ### What's Changed
@@ -381,6 +385,7 @@ class BaseController extends Controller
 
 
 
+
 ```
 v1.2.x :
 
@@ -495,6 +500,7 @@ class BaseController extends Controller
         return $ss_oauth2;
     }
 }
+
 
 
 
