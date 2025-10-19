@@ -1,6 +1,6 @@
 The MIT License (MIT)
 
-Copyright (c) 2025 Yudistira SD
+Copyright (c) 2025 Yudistira SD <yudistira.sd2@gmail.com>
 
 Based on original work by ivanwilliammd <ivanwilliam.md@gmail.com>
 
