@@ -13,6 +13,12 @@ return [
     'icd9_table_name' => 'satusehat_icd9',
 
     'kode_wilayah_indonesia_table_name' => 'kode_wilayah_indonesia',
+    'wilayah' => [
+        'provinsi_table_name' => 'satusehat_provinsi',
+        'kabupaten_table_name' => 'satusehat_kabupaten',
+        'kecamatan_table_name' => 'satusehat_kecamatan',
+        'kelurahan_table_name' => 'satusehat_kelurahan',
+    ],
     'profile_fasyankes_name' => 'satusehat_profile_fasyankes',
 
     /*
