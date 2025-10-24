@@ -1,4 +1,4 @@
-icd10_code;icd10_en;icd10_id
+code;display_en;display_id
 A00;Cholera;Kolera
 A00.0;Cholera due to vibrio cholerae 01, biovar cholerae;Kolera karena vibrio cholerae 01, biovar cholerae
 A00.1;Cholera due to vibrio cholerae 01, biovar eltor;Kolera karena vibrio cholerae 01, biovar eltor
