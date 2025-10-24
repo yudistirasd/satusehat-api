@@ -14,7 +14,7 @@ class Location extends OAuth2Client
 
     public function addIdentifier($location_identifier)
     {
-        $identifier['system'] = 'http://sys-ids.kemkes.go.id/location/'.$this->organization_id;
+        $identifier['system'] = 'http://sys-ids.kemkes.go.id/location/' . $this->organization_id;
         $identifier['value'] = $location_identifier;
 
         $this->location['identifier'][] = $identifier;
@@ -147,12 +147,12 @@ class Location extends OAuth2Client
 
     public function setManagingOrganization($managing_organization = null)
     {
-        $this->location['managingOrganization']['reference'] = 'Organization/'.$managing_organization;
+        $this->location['managingOrganization']['reference'] = 'Organization/' . $managing_organization;
     }
 
     public function setPartOf($part_of = null)
     {
-        $this->location['partOf']['reference'] = 'Location/'.$part_of;
+        $this->location['partOf']['reference'] = 'Location/' . $part_of;
     }
 
     public function json()

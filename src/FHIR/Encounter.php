@@ -11,7 +11,7 @@ class Encounter extends OAuth2Client
 
     public function addRegistrationId($registration_id)
     {
-        $identifier['system'] = 'http://sys-ids.kemkes.go.id/encounter/'.$this->organization_id;
+        $identifier['system'] = 'http://sys-ids.kemkes.go.id/encounter/' . $this->organization_id;
         $identifier['value'] = $registration_id;
 
         $this->encounter['identifier'][] = $identifier;
@@ -150,13 +150,13 @@ class Encounter extends OAuth2Client
 
     public function setSubject($subjectId, $name)
     {
-        $this->encounter['subject']['reference'] = 'Patient/'.$subjectId;
+        $this->encounter['subject']['reference'] = 'Patient/' . $subjectId;
         $this->encounter['subject']['display'] = $name;
     }
 
     public function addParticipant($participantId, $name, $type = 'ATND', $display = 'attender')
     {
-        $participant['individual']['reference'] = 'Practitioner/'.$participantId;
+        $participant['individual']['reference'] = 'Practitioner/' . $participantId;
         $participant['individual']['display'] = $name;
         $participant['type'][]['coding'][] = [
             'system' => 'http://terminology.hl7.org/CodeSystem/v3-ParticipationType',
@@ -169,7 +169,7 @@ class Encounter extends OAuth2Client
 
     public function addLocation($locationId, $name)
     {
-        $location['location']['reference'] = 'Location/'.$locationId;
+        $location['location']['reference'] = 'Location/' . $locationId;
         $location['location']['display'] = $name;
 
         $this->encounter['location'][] = $location;
@@ -177,7 +177,7 @@ class Encounter extends OAuth2Client
 
     public function setServiceProvider()
     {
-        $this->encounter['serviceProvider']['reference'] = 'Organization/'.$this->organization_id;
+        $this->encounter['serviceProvider']['reference'] = 'Organization/' . $this->organization_id;
     }
 
     public function addDiagnosis($id, $code, $display = null, $bundle = false)
@@ -193,7 +193,7 @@ class Encounter extends OAuth2Client
         $display = $display ? $display : $code_check->icd10_en;
 
         // Create Encounter.diagnosis content
-        $diagnosis['condition']['reference'] = ($bundle ? 'urn:uuid:' : 'Condition/').$id;
+        $diagnosis['condition']['reference'] = ($bundle ? 'urn:uuid:' : 'Condition/') . $id;
         $diagnosis['condition']['display'] = $display;
         $diagnosis['use']['coding'][] = [
             'system' => 'http://terminology.hl7.org/CodeSystem/diagnosis-role',

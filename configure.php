@@ -3,7 +3,7 @@
 
 function ask(string $question, string $default = ''): string
 {
-    $answer = readline($question.($default ? " ({$default})" : null).': ');
+    $answer = readline($question . ($default ? " ({$default})" : null) . ': ');
 
     if (! $answer) {
         return $default;
@@ -30,7 +30,7 @@ function askWithOptions(string $question, array $options, string $default = ''):
             break;
         }
 
-        writeln(PHP_EOL."Please pick one of the following options: {$validOptions}");
+        writeln(PHP_EOL . "Please pick one of the following options: {$validOptions}");
 
         $answer = ask("{$question} ({$suggestions})");
     }
@@ -44,7 +44,7 @@ function askWithOptions(string $question, array $options, string $default = ''):
 
 function confirm(string $question, bool $default = false): bool
 {
-    $answer = ask($question.' ('.($default ? 'Y/n' : 'y/N').')');
+    $answer = ask($question . ' (' . ($default ? 'Y/n' : 'y/N') . ')');
 
     if (! $answer) {
         return $default;
@@ -55,7 +55,7 @@ function confirm(string $question, bool $default = false): bool
 
 function writeln(string $line): void
 {
-    echo $line.PHP_EOL;
+    echo $line . PHP_EOL;
 }
 
 function run(string $command): string
@@ -115,53 +115,53 @@ function determineSeparator(string $path): string
 
 function replaceForWindows(): array
 {
-    return preg_split('/\\r\\n|\\r|\\n/', run('dir /S /B * | findstr /v /i .git\ | findstr /v /i vendor | findstr /v /i '.basename(__FILE__).' | findstr /r /i /M /F:/ ":author :vendor :package VendorName skeleton vendor_name vendor_slug author@domain.com"'));
+    return preg_split('/\\r\\n|\\r|\\n/', run('dir /S /B * | findstr /v /i .git\ | findstr /v /i vendor | findstr /v /i ' . basename(__FILE__) . ' | findstr /r /i /M /F:/ ":author :vendor :package VendorName skeleton vendor_name vendor_slug author@domain.com"'));
 }
 
 function replaceForAllOtherOSes(): array
 {
-    return explode(PHP_EOL, run('grep -E -r -l -i ":author|:vendor|:package|VendorName|skeleton|vendor_name|vendor_slug|author@domain.com" --exclude-dir=vendor ./* ./.github/* | grep -v '.basename(__FILE__)));
+    return explode(PHP_EOL, run('grep -E -r -l -i ":author|:vendor|:package|VendorName|skeleton|vendor_name|vendor_slug|author@domain.com" --exclude-dir=vendor ./* ./.github/* | grep -v ' . basename(__FILE__)));
 }
 
 function setupTestingLibrary(string $testingLibrary): void
 {
     if ($testingLibrary === 'pest') {
-        unlink(__DIR__.'/tests/ExampleTestPhpunit.php');
-        unlink(__DIR__.'/.github/workflows/run-tests-phpunit.yml');
+        unlink(__DIR__ . '/tests/ExampleTestPhpunit.php');
+        unlink(__DIR__ . '/.github/workflows/run-tests-phpunit.yml');
 
         rename(
-            from: __DIR__.'/tests/ExampleTestPest.php',
-            to: __DIR__.'/tests/ExampleTest.php'
+            from: __DIR__ . '/tests/ExampleTestPest.php',
+            to: __DIR__ . '/tests/ExampleTest.php'
         );
 
         rename(
-            from: __DIR__.'/.github/workflows/run-tests-pest.yml',
-            to: __DIR__.'/.github/workflows/run-tests.yml'
+            from: __DIR__ . '/.github/workflows/run-tests-pest.yml',
+            to: __DIR__ . '/.github/workflows/run-tests.yml'
         );
 
-        replace_in_file(__DIR__.'/composer.json', [
+        replace_in_file(__DIR__ . '/composer.json', [
             ':require_dev_testing' => '"pestphp/pest": "^2.20"',
             ':scripts_testing' => '"test": "vendor/bin/pest",
             "test-coverage": "vendor/bin/pest --coverage"',
             ':plugins_testing' => '"pestphp/pest-plugin": true',
         ]);
     } elseif ($testingLibrary === 'phpunit') {
-        unlink(__DIR__.'/tests/ExampleTestPest.php');
-        unlink(__DIR__.'/tests/ArchTest.php');
-        unlink(__DIR__.'/tests/Pest.php');
-        unlink(__DIR__.'/.github/workflows/run-tests-pest.yml');
+        unlink(__DIR__ . '/tests/ExampleTestPest.php');
+        unlink(__DIR__ . '/tests/ArchTest.php');
+        unlink(__DIR__ . '/tests/Pest.php');
+        unlink(__DIR__ . '/.github/workflows/run-tests-pest.yml');
 
         rename(
-            from: __DIR__.'/tests/ExampleTestPhpunit.php',
-            to: __DIR__.'/tests/ExampleTest.php'
+            from: __DIR__ . '/tests/ExampleTestPhpunit.php',
+            to: __DIR__ . '/tests/ExampleTest.php'
         );
 
         rename(
-            from: __DIR__.'/.github/workflows/run-tests-phpunit.yml',
-            to: __DIR__.'/.github/workflows/run-tests.yml'
+            from: __DIR__ . '/.github/workflows/run-tests-phpunit.yml',
+            to: __DIR__ . '/.github/workflows/run-tests.yml'
         );
 
-        replace_in_file(__DIR__.'/composer.json', [
+        replace_in_file(__DIR__ . '/composer.json', [
             ':require_dev_testing' => '"phpunit/phpunit": "^10.3.2"',
             ':scripts_testing' => '"test": "vendor/bin/phpunit",
             "test-coverage": "vendor/bin/phpunit --coverage"',
@@ -173,29 +173,29 @@ function setupTestingLibrary(string $testingLibrary): void
 function setupCodeStyleLibrary(string $codeStyleLibrary): void
 {
     if ($codeStyleLibrary === 'pint') {
-        unlink(__DIR__.'/.github/workflows/fix-php-code-style-issues-cs-fixer.yml');
+        unlink(__DIR__ . '/.github/workflows/fix-php-code-style-issues-cs-fixer.yml');
 
         rename(
-            from: __DIR__.'/.github/workflows/fix-php-code-style-issues-pint.yml',
-            to: __DIR__.'/.github/workflows/fix-php-code-style-issues.yml'
+            from: __DIR__ . '/.github/workflows/fix-php-code-style-issues-pint.yml',
+            to: __DIR__ . '/.github/workflows/fix-php-code-style-issues.yml'
         );
 
-        replace_in_file(__DIR__.'/composer.json', [
+        replace_in_file(__DIR__ . '/composer.json', [
             ':require_dev_codestyle' => '"laravel/pint": "^1.0"',
             ':scripts_codestyle' => '"format": "vendor/bin/pint"',
             ':plugins_testing' => '',
         ]);
 
-        unlink(__DIR__.'/.php-cs-fixer.dist.php');
+        unlink(__DIR__ . '/.php-cs-fixer.dist.php');
     } elseif ($codeStyleLibrary === 'cs fixer') {
-        unlink(__DIR__.'/.github/workflows/fix-php-code-style-issues-pint.yml');
+        unlink(__DIR__ . '/.github/workflows/fix-php-code-style-issues-pint.yml');
 
         rename(
-            from: __DIR__.'/.github/workflows/fix-php-code-style-issues-cs-fixer.yml',
-            to: __DIR__.'/.github/workflows/fix-php-code-style-issues.yml'
+            from: __DIR__ . '/.github/workflows/fix-php-code-style-issues-cs-fixer.yml',
+            to: __DIR__ . '/.github/workflows/fix-php-code-style-issues.yml'
         );
 
-        replace_in_file(__DIR__.'/composer.json', [
+        replace_in_file(__DIR__ . '/composer.json', [
             ':require_dev_codestyle' => '"friendsofphp/php-cs-fixer": "^3.21.1"',
             ':scripts_codestyle' => '"format": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --allow-risky=yes"',
             ':plugins_testing' => '',
@@ -274,7 +274,7 @@ foreach ($files as $file) {
     ]);
 
     match (true) {
-        str_contains($file, determineSeparator('src/SkeletonClass.php')) => rename($file, determineSeparator('./src/'.$className.'Class.php')),
+        str_contains($file, determineSeparator('src/SkeletonClass.php')) => rename($file, determineSeparator('./src/' . $className . 'Class.php')),
         str_contains($file, 'README.md') => removeReadmeParagraphs($file),
         default => [],
     };

@@ -94,14 +94,14 @@ class Condition extends OAuth2Client
 
     public function setSubject($subjectId, $name)
     {
-        $this->condition['subject']['reference'] = 'Patient/'.$subjectId;
+        $this->condition['subject']['reference'] = 'Patient/' . $subjectId;
         $this->condition['subject']['display'] = $name;
     }
 
     public function setEncounter($encounterId, $display = null, $bundle = false)
     {
-        $this->condition['encounter']['reference'] = ($bundle ? 'urn:uuid:' : 'Encounter/').$encounterId;
-        $this->condition['encounter']['display'] = $display ? $display : 'Kunjungan '.$encounterId;
+        $this->condition['encounter']['reference'] = ($bundle ? 'urn:uuid:' : 'Encounter/') . $encounterId;
+        $this->condition['encounter']['display'] = $display ? $display : 'Kunjungan ' . $encounterId;
     }
 
     public function setOnsetDateTime($onset_date_time = null)

@@ -19,7 +19,7 @@ class Organization extends OAuth2Client
 
     public function addIdentifier($organization_identifier)
     {
-        $identifier['system'] = 'http://sys-ids.kemkes.go.id/organization/'.$this->organization_id;
+        $identifier['system'] = 'http://sys-ids.kemkes.go.id/organization/' . $this->organization_id;
         $identifier['value'] = $organization_identifier;
         $identifier['use'] = 'official';
 
@@ -48,7 +48,7 @@ class Organization extends OAuth2Client
 
     public function setPartOf($partOf = null)
     {
-        $this->organization['partOf']['reference'] = 'Organization/'.($partOf ? $partOf : $this->organization_id);
+        $this->organization['partOf']['reference'] = 'Organization/' . ($partOf ? $partOf : $this->organization_id);
     }
 
     public function setType($type = 'dept')

@@ -166,7 +166,7 @@ class OAuth2Client
     public function log($resource, $id, $action, $url, $payload, $response)
     {
         $status = new SatusehatLog;
-        $status->resource_type =  $resource;
+        $status->resource_type = $resource;
         $status->response_id = $id;
         $status->action = $action;
         $status->url = $url;

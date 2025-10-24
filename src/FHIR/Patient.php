@@ -24,7 +24,7 @@ class Patient extends OAuth2Client
         }
 
         $identifier['use'] = 'official';
-        $identifier['system'] = 'https://fhir.kemkes.go.id/id/'.$identifier_type;
+        $identifier['system'] = 'https://fhir.kemkes.go.id/id/' . $identifier_type;
         $identifier['value'] = $identifier_value;
 
         $this->patient['identifier'][] = $identifier;

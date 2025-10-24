@@ -21,7 +21,7 @@ class MedicationDispense extends OAuth2Client
     public function setIdentifier($identifier)
     {
         $this->medicationDispense['identifier'][] = [
-            'system' => 'http://sys-ids.kemkes.go.id/prescription/'.$this->organization_id,
+            'system' => 'http://sys-ids.kemkes.go.id/prescription/' . $this->organization_id,
             'use' => 'official',
             'value' => $identifier,
         ];
@@ -43,21 +43,21 @@ class MedicationDispense extends OAuth2Client
     public function setSubject($code, $display)
     {
         $this->medicationDispense['subject'] = [
-            'reference' => 'Patient/'.$code,
+            'reference' => 'Patient/' . $code,
             'display' => $display,
         ];
     }
 
     public function setEncounter($encounterId)
     {
-        $this->medicationDispense['context']['reference'] = 'Encounter/'.$encounterId;
+        $this->medicationDispense['context']['reference'] = 'Encounter/' . $encounterId;
     }
 
     public function setPerformer($code, $display)
     {
         $this->medicationDispense['performer'][] = [
             'actor' => [
-                'reference' => 'Practitioner/'.$code,
+                'reference' => 'Practitioner/' . $code,
                 'display' => $display,
             ],
         ];
@@ -66,7 +66,7 @@ class MedicationDispense extends OAuth2Client
     public function setReference($code = null, $display = null)
     {
         $this->medicationDispense['medicationReference'] = [
-            'reference' => 'Medication/'.$code,
+            'reference' => 'Medication/' . $code,
             'display' => $display,
         ];
     }
@@ -74,7 +74,7 @@ class MedicationDispense extends OAuth2Client
     public function setLocation($code, $display)
     {
         $this->medicationDispense['location'] = [
-            'reference' => 'Location/'.$code,
+            'reference' => 'Location/' . $code,
             'display' => $display,
         ];
     }
@@ -82,7 +82,7 @@ class MedicationDispense extends OAuth2Client
     public function setAuthorizingPrescription($code)
     {
         $this->medicationDispense['authorizingPrescription'][] = [
-            'reference' => 'MedicationRequest/'.$code,
+            'reference' => 'MedicationRequest/' . $code,
         ];
     }
 
@@ -117,7 +117,7 @@ class MedicationDispense extends OAuth2Client
     {
         // auto replace reference based on contained medication id
         if (! empty($this->medicationDispense['contained'])) {
-            $this->medicationDispense['medicationReference']['reference'] = '#'.$this->medicationDispense['contained'][0]['id'];
+            $this->medicationDispense['medicationReference']['reference'] = '#' . $this->medicationDispense['contained'][0]['id'];
         }
 
         return json_encode($this->medicationDispense, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);

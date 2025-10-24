@@ -98,7 +98,6 @@ class SatusehatIntegrationServiceProvider extends ServiceProvider
             __DIR__ . '/../database/seeders/csv/provinsi.csv.stub' => database_path('/seeders/csv/provinsi.csv'),
         ], 'wilayah');
 
-
         // Kabupaten
         if (! class_exists('CreateKabupatenTable')) {
             $timestamp = date('Y_m_d_His', time());
@@ -112,7 +111,6 @@ class SatusehatIntegrationServiceProvider extends ServiceProvider
             __DIR__ . '/../database/seeders/csv/kabupaten.csv.stub' => database_path('/seeders/csv/kabupaten.csv'),
         ], 'wilayah');
 
-
         // Kecamatan
         if (! class_exists('CreateKecamatanTable')) {
             $timestamp = date('Y_m_d_His', time());
@@ -125,7 +123,6 @@ class SatusehatIntegrationServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../database/seeders/csv/kecamatan.csv.stub' => database_path('/seeders/csv/kecamatan.csv'),
         ], 'wilayah');
-
 
         // Kelurahan
         if (! class_exists('CreateKelurahanTable')) {
