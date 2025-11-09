@@ -17,6 +17,8 @@ class OAuth2Client
 {
     use Tenant;
 
+    public $satusehat_enable = true;
+
     public $patient_dev = ['P02478375538', 'P02428473601', 'P03647103112', 'P01058967035', 'P01836748436', 'P01654557057', 'P00805884304', 'P00883356749', 'P00912894463'];
 
     public $practitioner_dev = ['10009880728', '10006926841', '10001354453', '10010910332', '10018180913', '10002074224', '10012572188', '10018452434', '10014058550', '10001915884'];
@@ -48,72 +50,99 @@ class OAuth2Client
 
     public function __construct()
     {
+        // Load .env jika belum dimuat
         $dotenv = Dotenv::createUnsafeImmutable(getcwd());
         $dotenv->safeLoad();
+
+        // Satusehat enabled (default true)
+        $v = getenv('SATUSEHAT_ENABLE');
+        $this->satusehat_enable = ($v === false || $v === '') ? true : filter_var($v, FILTER_VALIDATE_BOOLEAN);
 
         $this->override = config('satusehatintegration.ss_parameter_override');
         $this->satusehat_env = getenv('SATUSEHAT_ENV');
 
-        if ($this->satusehat_env == 'PROD') {
-            $this->base_url = getenv('SATUSEHAT_BASE_URL_PROD') ?: 'https://api-satusehat.kemkes.go.id';
-            $this->client_id = getenv('CLIENTID_PROD');
-            $this->client_secret = getenv('CLIENTSECRET_PROD');
-            $this->organization_id = getenv('ORGID_PROD');
-        } elseif ($this->satusehat_env == 'STG') {
-            $this->base_url = getenv('SATUSEHAT_BASE_URL_STG') ?: 'https://api-satusehat-stg.dto.kemkes.go.id';
-            $this->client_id = getenv('CLIENTID_STG');
-            $this->client_secret = getenv('CLIENTSECRET_STG');
-            $this->organization_id = getenv('ORGID_STG');
-        } elseif ($this->satusehat_env == 'DEV') {
-            $this->base_url = getenv('SATUSEHAT_BASE_URL_DEV') ?: 'https://api-satusehat-dev.dto.kemkes.go.id';
-            $this->client_id = getenv('CLIENTID_DEV');
-            $this->client_secret = getenv('CLIENTSECRET_DEV');
-            $this->organization_id = getenv('ORGID_DEV');
-        }
-
-        if ($this->override) {
-            $this->profile = $this->getProfile();
-
-            $this->codeFasyankes = $this->profile->kode;
-            $this->client_id = $this->profile->client_key;
-            $this->client_secret = $this->profile->secret_key;
-            $this->organization_id = $this->profile->organization_id;
-        }
-
+        // Validasi environment awal
         if (empty($this->satusehat_env) && ! $this->override) {
             throw new OAuth2ClientException('SATUSEHAT environment is missing');
         }
 
         if (! in_array($this->satusehat_env, ['DEV', 'STG', 'PROD']) && ! $this->override) {
-            throw new OAuth2ClientException('SATUSEHAT environment invalid, supported (DEV, STG, PROD). ' . $this->satusehat_env . ' given.');
+            throw new OAuth2ClientException(
+                sprintf(
+                    'SATUSEHAT environment invalid, supported (DEV, STG, PROD). %s given.',
+                    $this->satusehat_env
+                )
+            );
         }
 
-        if ($this->satusehat_env == 'DEV' && (empty($this->client_id) || empty($this->client_secret || empty($this->organization_id))) && ! $this->override) {
-            throw new OAuth2ClientException('SATUSEHAT environment defined as DEV, but CLIENTID_DEV / CLIENTSECRET_DEV / ORGID_DEV not set');
+        // Map environment ke variabel ENV yang sesuai
+        $this->setEnvironmentConfig($this->satusehat_env);
+
+        // Jika override aktif, ambil data dari profile
+        if ($this->override) {
+            $this->applyProfileOverride();
         }
 
-        if ($this->satusehat_env == 'STG' && (empty($this->client_id) || empty($this->client_secret || empty($this->organization_id))) && ! $this->override) {
-            throw new OAuth2ClientException('SATUSEHAT environment defined as STG, but CLIENTID_STG / CLIENTSECRET_STG / ORGID_STG not set');
-        }
+        // Validasi kredensial wajib
+        $this->validateCredentials();
 
-        if ($this->satusehat_env == 'PROD' && (empty($this->client_id) || empty($this->client_secret || empty($this->organization_id))) && ! $this->override) {
-            throw new OAuth2ClientException('SATUSEHAT environment defined as PROD, but CLIENTID_PROD / CLIENTSECRET_PROD / ORGID_PROD not set');
-        }
-
+        // Endpoint default (bisa diubah dari ENV)
         $authEndpoint = getenv('SATUSEHAT_AUTH_ENDPOINT') ?: '/oauth2/v1';
         $fhirEndpoint = getenv('SATUSEHAT_FHIR_ENDPOINT') ?: '/fhir-r4/v1';
 
-        // // untuk handle versioning endpoint
+        // Final endpoint URLs
         $this->auth_url = $this->base_url . $authEndpoint;
         $this->fhir_url = $this->base_url . $fhirEndpoint;
+    }
 
-        if (! $this->override && $this->organization_id == null) {
-            return 'Add your organization_id at environment first';
+    protected function setEnvironmentConfig(string $env): void
+    {
+        $env = strtoupper($env);
+
+        $defaults = [
+            'DEV'  => 'https://api-satusehat-dev.dto.kemkes.go.id',
+            'STG'  => 'https://api-satusehat-stg.dto.kemkes.go.id',
+            'PROD' => 'https://api-satusehat.kemkes.go.id',
+        ];
+
+        $this->base_url       = getenv("SATUSEHAT_BASE_URL_{$env}") ?: $defaults[$env];
+        $this->client_id      = getenv("CLIENTID_{$env}");
+        $this->client_secret  = getenv("CLIENTSECRET_{$env}");
+        $this->organization_id = getenv("ORGID_{$env}");
+    }
+
+    protected function applyProfileOverride(): void
+    {
+        $this->profile = $this->getProfile();
+
+        $this->codeFasyankes   = $this->profile->kode;
+        $this->client_id       = $this->profile->client_key;
+        $this->client_secret   = $this->profile->secret_key;
+        $this->organization_id = $this->profile->organization_id;
+    }
+
+    protected function validateCredentials(): void
+    {
+        if (empty($this->client_id) || empty($this->client_secret) || empty($this->organization_id)) {
+            throw new OAuth2ClientException(sprintf(
+                'SATUSEHAT environment defined as %s, but CLIENTID_%1$s / CLIENTSECRET_%1$s / ORGID_%1$s not set',
+                $this->satusehat_env
+            ));
         }
     }
 
+
+
     public function token()
     {
+        if (!$this->satusehat_enable) {
+            $this->oauth2_error = [
+                'statusCode' => 503,
+                'res' => 'SATUSEHAT integration disabled',
+            ];
+            return null;
+        }
+
         $token = SatusehatToken::where('environment', $this->satusehat_env)->where('client_id', $this->client_id)->orderBy('created_at', 'desc')
             ->where('created_at', '>', now()->subMinutes(50))->first();
 
