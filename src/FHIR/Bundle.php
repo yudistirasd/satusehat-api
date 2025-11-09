@@ -58,7 +58,7 @@ class Bundle extends OAuth2Client
 
         if (! isset($this->bundle['entry'][0])) {
             $this->bundle['entry'][0] = [
-                'fullUrl' => 'urn:uuid:'.$this->encounter_id,
+                'fullUrl' => 'urn:uuid:' . $this->encounter_id,
                 'resource' => '',
                 'request' => [
                     'method' => 'POST',
@@ -70,7 +70,7 @@ class Bundle extends OAuth2Client
         $this->bundle['entry'][0]['resource'] = json_decode($this->encounter->json());
 
         $this->bundle['entry'][] = [
-            'fullUrl' => 'urn:uuid:'.$condition_uuid,
+            'fullUrl' => 'urn:uuid:' . $condition_uuid,
             'resource' => json_decode($condition->json()),
             'request' => [
                 'method' => 'POST',

@@ -39,7 +39,7 @@ class MedicationRequest extends OAuth2Client
     public function setIdentifier($identifier)
     {
         $this->medicationRequest['identifier'][] = [
-            'system' => 'http://sys-ids.kemkes.go.id/prescription/'.$this->organization_id,
+            'system' => 'http://sys-ids.kemkes.go.id/prescription/' . $this->organization_id,
             'use' => 'official',
             'value' => $identifier,
         ];
@@ -73,24 +73,24 @@ class MedicationRequest extends OAuth2Client
 
     public function setSubject($subjectId, $name)
     {
-        $this->medicationRequest['subject']['reference'] = 'Patient/'.$subjectId;
+        $this->medicationRequest['subject']['reference'] = 'Patient/' . $subjectId;
         $this->medicationRequest['subject']['display'] = $name;
     }
 
     public function setEncounter($encounterId)
     {
-        $this->medicationRequest['encounter']['reference'] = 'Encounter/'.$encounterId;
+        $this->medicationRequest['encounter']['reference'] = 'Encounter/' . $encounterId;
     }
 
     public function setRequester($practitionerId, $name)
     {
-        $this->medicationRequest['requester']['reference'] = 'Practitioner/'.$practitionerId;
+        $this->medicationRequest['requester']['reference'] = 'Practitioner/' . $practitionerId;
         $this->medicationRequest['requester']['display'] = $name;
     }
 
     public function setReference($referenceId = null, $display = null)
     {
-        $this->medicationRequest['medicationReference']['reference'] = 'Medication/'.$referenceId;
+        $this->medicationRequest['medicationReference']['reference'] = 'Medication/' . $referenceId;
         $this->medicationRequest['medicationReference']['display'] = $display;
     }
 
@@ -125,7 +125,7 @@ class MedicationRequest extends OAuth2Client
         }
 
         $this->medicationRequest['dispenseRequest']['performer'] = [
-            'reference' => 'Organization/'.$this->organization_id,
+            'reference' => 'Organization/' . $this->organization_id,
         ];
     }
 
@@ -133,7 +133,7 @@ class MedicationRequest extends OAuth2Client
     {
         // auto replace reference based on contained medication id
         if (! empty($this->medicationRequest['contained'])) {
-            $this->medicationRequest['medicationReference']['reference'] = '#'.$this->medicationRequest['contained'][0]['id'];
+            $this->medicationRequest['medicationReference']['reference'] = '#' . $this->medicationRequest['contained'][0]['id'];
         }
 
         return json_encode($this->medicationRequest, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);

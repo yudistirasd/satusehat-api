@@ -19,7 +19,7 @@ class Kfa extends OAuth2Client
     public function getProduct(string $identifier, string $code)
     {
         if (! in_array($identifier, $this->identifier)) {
-            throw new TerminologyInvalidArgumentException('Identifier currently available ('.implode(', ', $this->identifier)."), $identifier given");
+            throw new TerminologyInvalidArgumentException('Identifier currently available (' . implode(', ', $this->identifier) . "), $identifier given");
         }
 
         $queryStringBuilder = [

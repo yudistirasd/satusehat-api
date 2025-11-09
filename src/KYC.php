@@ -48,7 +48,7 @@ class KYC extends OAuth2Client
         file_put_contents($tempFile, $binaryDerString);
 
         // Import the RSA key using openssl
-        $key = openssl_pkey_get_public('file://'.$tempFile);
+        $key = openssl_pkey_get_public('file://' . $tempFile);
 
         // Generate the key details for encryption
         $keyDetails = openssl_pkey_get_details($key);
@@ -134,7 +134,7 @@ class KYC extends OAuth2Client
         $tag = $cipher->getTag();
 
         // Concatenate the IV, ciphertext, and tag
-        $encryptedData = $iv.$ciphertext.$tag;
+        $encryptedData = $iv . $ciphertext . $tag;
 
         return $encryptedData;
     }
@@ -185,7 +185,7 @@ class KYC extends OAuth2Client
         $encryptedMessage = $this->aesEncrypt($message, $aesKey);
 
         // Combine wrapped AES key and encrypted message
-        $payload = $wrappedAesKey.$encryptedMessage;
+        $payload = $wrappedAesKey . $encryptedMessage;
 
         return $this->formatMessage($payload);
     }
@@ -268,7 +268,7 @@ class KYC extends OAuth2Client
         curl_setopt($ch, CURLOPT_POSTFIELDS, $encryptedPayload);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: text/plain',
-            'Authorization: Bearer '.$accessToken,
+            'Authorization: Bearer ' . $accessToken,
         ]);
 
         // Execute the request
@@ -276,7 +276,7 @@ class KYC extends OAuth2Client
 
         // Check for cURL errors
         if (curl_errno($ch)) {
-            echo 'cURL error: '.curl_error($ch);
+            echo 'cURL error: ' . curl_error($ch);
         }
 
         // Close cURL

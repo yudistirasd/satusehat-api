@@ -34,7 +34,7 @@ class Medication extends OAuth2Client
     public function setIdentifier($identifier)
     {
         $this->medication['identifier'][] = [
-            'system' => 'http://sys-ids.kemkes.go.id/medication/'.$this->organization_id,
+            'system' => 'http://sys-ids.kemkes.go.id/medication/' . $this->organization_id,
             'value' => $identifier,
         ];
     }
