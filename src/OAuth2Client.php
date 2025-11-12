@@ -100,14 +100,14 @@ class OAuth2Client
         $env = strtoupper($env);
 
         $defaults = [
-            'DEV'  => 'https://api-satusehat-dev.dto.kemkes.go.id',
-            'STG'  => 'https://api-satusehat-stg.dto.kemkes.go.id',
+            'DEV' => 'https://api-satusehat-dev.dto.kemkes.go.id',
+            'STG' => 'https://api-satusehat-stg.dto.kemkes.go.id',
             'PROD' => 'https://api-satusehat.kemkes.go.id',
         ];
 
-        $this->base_url       = getenv("SATUSEHAT_BASE_URL_{$env}") ?: $defaults[$env];
-        $this->client_id      = getenv("CLIENTID_{$env}");
-        $this->client_secret  = getenv("CLIENTSECRET_{$env}");
+        $this->base_url = getenv("SATUSEHAT_BASE_URL_{$env}") ?: $defaults[$env];
+        $this->client_id = getenv("CLIENTID_{$env}");
+        $this->client_secret = getenv("CLIENTSECRET_{$env}");
         $this->organization_id = getenv("ORGID_{$env}");
     }
 
@@ -115,9 +115,9 @@ class OAuth2Client
     {
         $this->profile = $this->getProfile();
 
-        $this->codeFasyankes   = $this->profile->kode;
-        $this->client_id       = $this->profile->client_key;
-        $this->client_secret   = $this->profile->secret_key;
+        $this->codeFasyankes = $this->profile->kode;
+        $this->client_id = $this->profile->client_key;
+        $this->client_secret = $this->profile->secret_key;
         $this->organization_id = $this->profile->organization_id;
     }
 
@@ -131,15 +131,14 @@ class OAuth2Client
         }
     }
 
-
-
     public function token()
     {
-        if (!$this->satusehat_enable) {
+        if (! $this->satusehat_enable) {
             $this->oauth2_error = [
                 'statusCode' => 503,
                 'res' => 'SATUSEHAT integration disabled',
             ];
+
             return null;
         }
 
