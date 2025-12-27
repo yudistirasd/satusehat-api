@@ -91,48 +91,63 @@ class Observation extends OAuth2Client
      * @param  string  $code  The valid observation code to add.
      * @return Observation Returns the updated observation object.
      */
-    public function addCode(string $observationCode): Observation
+    public function addCode(string $observationCode, string $value): Observation
     {
-        $code = [
-            'system' => 'http://loinc.org',
-            'code' => '',
-            'display' => '',
-        ];
-
-        $display = '';
-        $code = '';
         switch ($observationCode) {
             case '8480-6':
                 $display = 'Systolic blood pressure';
                 $code = '8480-6';
+                $unitDisplay = 'mm[Hg]';
+                $unitCode = 'mm[Hg]';
                 break;
             case '8462-4':
                 $display = 'Diastolic blood pressure';
                 $code = '8462-4';
+                $unitDisplay = 'mm[Hg]';
+                $unitCode = 'mm[Hg]';
                 break;
             case '8867-4':
                 $display = 'Heart rate';
                 $code = '8867-4';
+                $unitDisplay = '{beats}/min';
+                $unitCode = '{beats}/min';
                 break;
             case '8310-5':
                 $display = 'Body temperature';
                 $code = '8310-5';
+                $unitDisplay = 'Cel';
+                $unitCode = 'Cel';
                 break;
             case '9279-1':
                 $display = 'Respiratory rate';
                 $code = '9279-1';
+                $unitDisplay = 'breaths/min';
+                $unitCode = '/min';
                 break;
+            default:
+                $display = null;
+                $code = null;
         }
 
-        $this->observation['code'] = [
-            'coding' => [
+        $this->observation = [
+            'code' => [
                 [
-                    'system' => 'http://loinc.org',
-                    'code' => $code,
-                    'display' => $display,
-                ],
+                    'coding' => [
+                        [
+                            'system' => 'http://loinc.org',
+                            'code' => $code,
+                            'display' => $display,
+                        ],
 
+                    ],
+                ]
             ],
+            'valueQuantity' => [
+                'value' =>  $value,
+                'unit' =>  $unitDisplay,
+                'system' =>  "http://unitsofmeasure.org",
+                'code' =>  $unitCode
+            ]
         ];
 
         return $this;
