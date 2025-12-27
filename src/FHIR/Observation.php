@@ -59,13 +59,15 @@ class Observation extends OAuth2Client
      */
     public function addCategory(string $category): Observation
     {
-        $display = '';
-        $code = '';
+
         switch ($category) {
             case 'vital-signs':
                 $display = 'Vital Signs';
                 $code = 'vital-signs';
                 break;
+            default:
+                $display = '';
+                $code = '';
         }
 
         // NOTE: we currently only support 'vital-signs'
