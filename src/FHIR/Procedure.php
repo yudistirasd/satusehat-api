@@ -12,13 +12,13 @@ class Procedure extends OAuth2Client
 
     public function addCode($code = null, $display = null)
     {
-        $code_check = Icd9::where('icd9_code', $code)->first();
+        $code_check = Icd9::where('code', $code)->first();
 
         if (! $code_check) {
             throw new FHIRException('Kode ICD 9 (' . $code . ') tidak ditemukan');
         }
 
-        $display = $display ? $display : $code_check->icd9_display;
+        $display = $display ? $display : $code_check->display_en;
 
         $this->procedure['code']['coding'][] = [
             'system' => 'http://hl7.org/fhir/sid/icd-9-cm',

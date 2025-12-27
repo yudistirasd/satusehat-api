@@ -76,14 +76,14 @@ class Condition extends OAuth2Client
     public function addCode($code = null, $display = null)
     {
         // Look in database if display is null
-        $code_check = Icd10::where('icd10_code', $code)->first();
+        $code_check = Icd10::where('code', $code)->first();
 
         // Handling if incomplete code / display
         if (! $code_check) {
             throw new FHIRException('Kode ICD10 tidak ditemukan');
         }
 
-        $display = $display ? $display : $code_check->icd10_en;
+        $display = $display ? $display : $code_check->display_en;
 
         $this->condition['code']['coding'][] = [
             'system' => 'http://hl7.org/fhir/sid/icd-10',
