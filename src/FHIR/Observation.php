@@ -139,14 +139,14 @@ class Observation extends OAuth2Client
                     ],
 
                 ],
-            ]
+            ],
         ];
 
         $this->observation['valueQuantity'] = [
-            'value' =>  $value,
-            'unit' =>  $unitDisplay,
-            'system' =>  "http://unitsofmeasure.org",
-            'code' =>  $unitCode
+            'value' => $value,
+            'unit' => $unitDisplay,
+            'system' => 'http://unitsofmeasure.org',
+            'code' => $unitCode,
         ];
 
         return $this;
