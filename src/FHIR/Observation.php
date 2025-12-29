@@ -129,25 +129,24 @@ class Observation extends OAuth2Client
                 $code = null;
         }
 
-        $this->observation = [
-            'code' => [
-                [
-                    'coding' => [
-                        [
-                            'system' => 'http://loinc.org',
-                            'code' => $code,
-                            'display' => $display,
-                        ],
-
+        $this->observation['code'] = [
+            [
+                'coding' => [
+                    [
+                        'system' => 'http://loinc.org',
+                        'code' => $code,
+                        'display' => $display,
                     ],
-                ]
-            ],
-            'valueQuantity' => [
-                'value' =>  $value,
-                'unit' =>  $unitDisplay,
-                'system' =>  "http://unitsofmeasure.org",
-                'code' =>  $unitCode
+
+                ],
             ]
+        ];
+
+        $this->observation['valueQuantity'] = [
+            'value' =>  $value,
+            'unit' =>  $unitDisplay,
+            'system' =>  "http://unitsofmeasure.org",
+            'code' =>  $unitCode
         ];
 
         return $this;
