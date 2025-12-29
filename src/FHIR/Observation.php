@@ -91,7 +91,7 @@ class Observation extends OAuth2Client
      * @param  string  $code  The valid observation code to add.
      * @return Observation Returns the updated observation object.
      */
-    public function addCode(string $observationCode, string $value): Observation
+    public function addCode(string $observationCode, int $value): Observation
     {
         switch ($observationCode) {
             case '8480-6':
