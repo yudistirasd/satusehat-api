@@ -130,15 +130,13 @@ class Observation extends OAuth2Client
         }
 
         $this->observation['code'] = [
-            [
-                'coding' => [
-                    [
-                        'system' => 'http://loinc.org',
-                        'code' => $code,
-                        'display' => $display,
-                    ],
-
+            'coding' => [
+                [
+                    'system' => 'http://loinc.org',
+                    'code' => $code,
+                    'display' => $display,
                 ],
+
             ],
         ];
 
