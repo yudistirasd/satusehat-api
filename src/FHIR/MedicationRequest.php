@@ -10,17 +10,15 @@ class MedicationRequest extends OAuth2Client
 {
     public array $medicationRequest = [
         'resourceType' => 'MedicationRequest',
-        'category' => [
-            [
-                'coding' => [
-                    [
-                        'system' => 'http://terminology.hl7.org/CodeSystem/medicationrequest-category',
-                        'code' => 'community',
-                        'display' => 'Community',
-                    ],
-                ],
-            ],
-        ],
+        'courseOfTherapyType' => [
+            'coding' => [
+                [
+                    'system' => 'http://terminology.hl7.org/CodeSystem/medicationrequest-course-of-therapy',
+                    'code' => 'acute',
+                    'display' => 'Short course (acute) therapy'
+                ]
+            ]
+        ]
     ];
 
     public function setContained(Medication $medication)
@@ -40,6 +38,15 @@ class MedicationRequest extends OAuth2Client
     {
         $this->medicationRequest['identifier'][] = [
             'system' => 'http://sys-ids.kemkes.go.id/prescription/' . $this->organization_id,
+            'use' => 'official',
+            'value' => $identifier,
+        ];
+    }
+
+    public function setIdentifierItem($identifier)
+    {
+        $this->medicationRequest['identifier'][] = [
+            'system' => 'http://sys-ids.kemkes.go.id/prescription-item/' . $this->organization_id,
             'use' => 'official',
             'value' => $identifier,
         ];
@@ -101,6 +108,65 @@ class MedicationRequest extends OAuth2Client
         $this->medicationRequest['authoredOn'] = $authoredOn;
     }
 
+    public function setCategory($code = 'community', $display = 'Community')
+    {
+        $this->medicationRequest['category'] = [
+            [
+                'coding' => [
+                    [
+                        'system' => 'http://terminology.hl7.org/CodeSystem/medicationrequest-category',
+                        'code' => $code,
+                        'display' => $display,
+                    ],
+                ]
+            ],
+        ];
+    }
+
+    public function setDosageInstruction($aturanPakai, $keterangan, $frekuensi, $periode)
+    {
+        $this->medicationRequest['dosageInstruction'] = [
+            [
+                'sequence' => 1,
+                'text' => $aturanPakai,
+                'additionalInstruction' => [
+                    [
+                        'text' => $aturanPakai,
+                    ],
+                ],
+                'patientInstruction' => $keterangan,
+                'timing' => [
+                    'repeat' => [
+                        'frequency' => $frekuensi,
+                        'period' => $periode,
+                        'periodUnit' => 'd',
+                    ],
+                ],
+                'route' => [
+                    'coding' => [
+                        [
+                            'system' => 'http://www.whocc.no/atc',
+                            'code' => 'O',
+                            'display' => 'Oral',
+                        ],
+                    ],
+                ],
+                'doseAndRate' => [
+                    [
+                        'type' => [
+                            'coding' => [
+                                [
+                                    'system' => 'http://terminology.hl7.org/CodeSystem/dose-rate-type',
+                                    'code' => 'ordered',
+                                    'display' => 'Ordered',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        ];
+    }
     public function setDispenseRequest($dispenseInterval = [], $validityPeriod = [], $numberOfRepeatsAllowed = 0, $quantity = [], $expectedSupplyDuration = [])
     {
 

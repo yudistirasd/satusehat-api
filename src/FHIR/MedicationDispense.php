@@ -27,6 +27,15 @@ class MedicationDispense extends OAuth2Client
         ];
     }
 
+    public function setIdentifierItem($identifier)
+    {
+        $this->medicationDispense['identifier'][] = [
+            'system' => 'http://sys-ids.kemkes.go.id/prescription-item/' . $this->organization_id,
+            'use' => 'official',
+            'value' => $identifier,
+        ];
+    }
+
     public function setStatus($status = 'completed')
     {
         $statusAvailable = ['active',  'completed'];
@@ -38,6 +47,21 @@ class MedicationDispense extends OAuth2Client
         }
 
         $this->medicationDispense['status'] = $status;
+    }
+
+    public function setCategory($code = 'community', $display = 'Community')
+    {
+        $this->medicationDispense['category'] = [
+            [
+                'coding' => [
+                    [
+                        'system' => 'http://terminology.hl7.org/CodeSystem/medicationrequest-category',
+                        'code' => $code,
+                        'display' => $display,
+                    ],
+                ]
+            ],
+        ];
     }
 
     public function setSubject($code, $display)

@@ -74,6 +74,13 @@ class Medication extends OAuth2Client
         ];
     }
 
+    public function setManufacturer()
+    {
+        $this->medication['manufacturer'] = [
+            'reference' => 'Organization/' . $this->organization_id
+        ];
+    }
+
     public function getPayload($key = null)
     {
         if (! empty($key)) {
