@@ -59,7 +59,7 @@ class MedicationDispense extends OAuth2Client
                         'code' => $code,
                         'display' => $display,
                     ],
-                ]
+                ],
             ],
         ];
     }

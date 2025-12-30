@@ -77,7 +77,7 @@ class Medication extends OAuth2Client
     public function setManufacturer()
     {
         $this->medication['manufacturer'] = [
-            'reference' => 'Organization/' . $this->organization_id
+            'reference' => 'Organization/' . $this->organization_id,
         ];
     }
 

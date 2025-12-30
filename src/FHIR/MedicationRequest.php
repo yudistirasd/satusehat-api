@@ -15,10 +15,10 @@ class MedicationRequest extends OAuth2Client
                 [
                     'system' => 'http://terminology.hl7.org/CodeSystem/medicationrequest-course-of-therapy',
                     'code' => 'acute',
-                    'display' => 'Short course (acute) therapy'
-                ]
-            ]
-        ]
+                    'display' => 'Short course (acute) therapy',
+                ],
+            ],
+        ],
     ];
 
     public function setContained(Medication $medication)
@@ -118,7 +118,7 @@ class MedicationRequest extends OAuth2Client
                         'code' => $code,
                         'display' => $display,
                     ],
-                ]
+                ],
             ],
         ];
     }
@@ -164,9 +164,10 @@ class MedicationRequest extends OAuth2Client
                         ],
                     ],
                 ],
-            ]
+            ],
         ];
     }
+
     public function setDispenseRequest($dispenseInterval = [], $validityPeriod = [], $numberOfRepeatsAllowed = 0, $quantity = [], $expectedSupplyDuration = [])
     {
 
