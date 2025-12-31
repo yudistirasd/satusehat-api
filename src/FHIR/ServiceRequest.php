@@ -17,10 +17,10 @@ class ServiceRequest extends OAuth2Client
                     [
                         'system' => 'http://snomed.info/sct',
                         'code' => '108252007',
-                        'display' => 'Laboratory procedure'
-                    ]
-                ]
-            ]
+                        'display' => 'Laboratory procedure',
+                    ],
+                ],
+            ],
         ],
     ];
 
@@ -29,8 +29,8 @@ class ServiceRequest extends OAuth2Client
         $this->serviceRequest['identifier'] = [
             [
                 'system' => 'http://sys-ids.kemkes.go.id/servicerequest/' . $this->organization_id,
-                'value' => $identifier
-            ]
+                'value' => $identifier,
+            ],
         ];
     }
 
@@ -41,17 +41,17 @@ class ServiceRequest extends OAuth2Client
                 [
                     'system' => $codeSystem,
                     'code' => $code,
-                    'display' => $display
+                    'display' => $display,
                 ],
             ],
-            'text' => $text ?? 'Permintaan Pemeriksaan ' . $display
+            'text' => $text ?? 'Permintaan Pemeriksaan ' . $display,
         ];
     }
 
     public function setSubject($subjectId)
     {
         $this->serviceRequest['subject'] = [
-            'reference' => 'Patient/' . $subjectId
+            'reference' => 'Patient/' . $subjectId,
         ];
     }
 
@@ -79,8 +79,8 @@ class ServiceRequest extends OAuth2Client
         $this->serviceRequest['performer'] = [
             [
                 'reference' => 'Practitioner/' . $practitionerId,
-                'display' => $practitionerDisplay
-            ]
+                'display' => $practitionerDisplay,
+            ],
         ];
     }
 
