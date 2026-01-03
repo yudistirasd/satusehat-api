@@ -9,15 +9,6 @@ class Specimen extends OAuth2Client
     public array $specimen = [
         'resourceType' => 'Specimen',
         'status' => 'available',
-        'type' => [
-            'coding' => [
-                [
-                    'system' => 'http://snomed.info/sct',
-                    'code' => '119297000',
-                    'display' => 'Blood specimen (specimen)',
-                ],
-            ],
-        ],
     ];
 
     public function setIdentifier($identifier)
