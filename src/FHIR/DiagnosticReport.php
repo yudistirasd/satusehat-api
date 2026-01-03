@@ -7,18 +7,18 @@ use Satusehat\Integration\OAuth2Client;
 class DiagnosticReport extends OAuth2Client
 {
     private array $diagnostic = [
-        "resourceType" => "DiagnosticReport",
-        "conclusionCode" => [
+        'resourceType' => 'DiagnosticReport',
+        'conclusionCode' => [
             [
-                "coding" => [
+                'coding' => [
                     [
-                        "system" => "http://loinc.org",
-                        "code" => "LA19710-5",
-                        "display" => "Group A"
-                    ]
-                ]
-            ]
-        ]
+                        'system' => 'http://loinc.org',
+                        'code' => 'LA19710-5',
+                        'display' => 'Group A',
+                    ],
+                ],
+            ],
+        ],
     ];
 
     public function setStatus($status = 'final')
@@ -118,8 +118,8 @@ class DiagnosticReport extends OAuth2Client
     {
         $this->diagnostic['specimen'] = [
             [
-                'reference' => 'Specimen/' . $specimenId
-            ]
+                'reference' => 'Specimen/' . $specimenId,
+            ],
         ];
     }
 
@@ -127,8 +127,8 @@ class DiagnosticReport extends OAuth2Client
     {
         $this->diagnostic['basedOn'] = [
             [
-                'reference' => 'ServiceRequest/' . $serviceRequestId
-            ]
+                'reference' => 'ServiceRequest/' . $serviceRequestId,
+            ],
         ];
     }
 
@@ -144,8 +144,8 @@ class DiagnosticReport extends OAuth2Client
     {
         $this->diagnostic['result'] = [
             [
-                "reference" => "Observation/" . $observationId
-            ]
+                'reference' => 'Observation/' . $observationId,
+            ],
         ];
     }
 

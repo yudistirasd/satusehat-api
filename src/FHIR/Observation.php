@@ -95,7 +95,7 @@ class Observation extends OAuth2Client
      * @param  string  $code  The valid observation code to add.
      * @return Observation Returns the updated observation object.
      */
-    public function addCode(string $loincCode, mixed $value = null, string $type = null, string $loincDisplay = null): Observation
+    public function addCode(string $loincCode, mixed $value = null, ?string $type = null, ?string $loincDisplay = null): Observation
     {
         switch ($loincCode) {
             case '8480-6':
@@ -153,11 +153,11 @@ class Observation extends OAuth2Client
             $this->observation['valueCodeableConcept'] = [
                 'coding' => [
                     [
-                        "system" => "http://loinc.org",
-                        "code" => "LA19710-5",
-                        "display" => "Group A"
-                    ]
-                ]
+                        'system' => 'http://loinc.org',
+                        'code' => 'LA19710-5',
+                        'display' => 'Group A',
+                    ],
+                ],
             ];
         }
 
@@ -171,8 +171,6 @@ class Observation extends OAuth2Client
 
             ],
         ];
-
-
 
         return $this;
     }
@@ -222,7 +220,7 @@ class Observation extends OAuth2Client
     public function setSpecimen($specimenId)
     {
         $this->observation['specimen'] = [
-            'reference' => 'Specimen/' . $specimenId
+            'reference' => 'Specimen/' . $specimenId,
         ];
     }
 
@@ -230,11 +228,10 @@ class Observation extends OAuth2Client
     {
         $this->observation['basedOn'] = [
             [
-                'reference' => 'ServiceRequest/' . $serviceRequestId
-            ]
+                'reference' => 'ServiceRequest/' . $serviceRequestId,
+            ],
         ];
     }
-
 
     /**
      * Visit data where observation results are obtained
@@ -288,11 +285,11 @@ class Observation extends OAuth2Client
             return $cat['coding'][0]['code'] === 'laboratory';
         });
 
-        if ($isLabCategory && !array_key_exists('basedOn', $this->observation)) {
+        if ($isLabCategory && ! array_key_exists('basedOn', $this->observation)) {
             throw new FHIRMissingProperty('Service Request (baseOn) is required.');
         }
 
-        if ($isLabCategory && !array_key_exists('specimen', $this->observation)) {
+        if ($isLabCategory && ! array_key_exists('specimen', $this->observation)) {
             throw new FHIRMissingProperty('Specimen is required.');
         }
 
