@@ -65,12 +65,16 @@ class Observation extends OAuth2Client
                 $display = 'Vital Signs';
                 $code = 'vital-signs';
                 break;
+            case 'laboratory':
+                $display = 'Laboratory';
+                $code = 'laboratory';
+                break;
             default:
                 $display = '';
                 $code = '';
         }
 
-        // NOTE: we currently only support 'vital-signs'
+        // NOTE: we currently only support 'vital-signs' and 'laboratory'
         $this->observation['category'][] = [
             'coding' => [
                 [
@@ -91,9 +95,9 @@ class Observation extends OAuth2Client
      * @param  string  $code  The valid observation code to add.
      * @return Observation Returns the updated observation object.
      */
-    public function addCode(string $observationCode, int $value): Observation
+    public function addCode(string $loincCode, mixed $value = null, string $type = null, string $loincDisplay = null): Observation
     {
-        switch ($observationCode) {
+        switch ($loincCode) {
             case '8480-6':
                 $display = 'Systolic blood pressure';
                 $code = '8480-6';
@@ -129,6 +133,34 @@ class Observation extends OAuth2Client
                 $code = null;
         }
 
+        if (empty($type)) {
+            $this->observation['valueQuantity'] = [
+                'value' => $value,
+                'unit' => $unitDisplay,
+                'system' => 'http://unitsofmeasure.org',
+                'code' => $unitCode,
+            ];
+        }
+
+        if ($type == 'laboratory') {
+            $code = $loincCode;
+            $display = $value;
+
+            if (empty($loincDisplay)) {
+                throw new FHIRMissingProperty('Loinc Display is required when the type is set to Laboratory');
+            }
+
+            $this->observation['valueCodeableConcept'] = [
+                'coding' => [
+                    [
+                        "system" => "http://loinc.org",
+                        "code" => "LA19710-5",
+                        "display" => "Group A"
+                    ]
+                ]
+            ];
+        }
+
         $this->observation['code'] = [
             'coding' => [
                 [
@@ -140,12 +172,7 @@ class Observation extends OAuth2Client
             ],
         ];
 
-        $this->observation['valueQuantity'] = [
-            'value' => $value,
-            'unit' => $unitDisplay,
-            'system' => 'http://unitsofmeasure.org',
-            'code' => $unitCode,
-        ];
+
 
         return $this;
     }
@@ -184,6 +211,31 @@ class Observation extends OAuth2Client
         return $this;
     }
 
+    public function setEffectiveDateTime($dateTime = null)
+    {
+        $dateTime = $dateTime ?? gmdate("Y-m-d\TH:i:sP");
+
+        $this->observation['effectiveDateTime'] = $dateTime;
+        $this->observation['issued'] = $dateTime;
+    }
+
+    public function setSpecimen($specimenId)
+    {
+        $this->observation['specimen'] = [
+            'reference' => 'Specimen/' . $specimenId
+        ];
+    }
+
+    public function setServiceRequest($serviceRequestId)
+    {
+        $this->observation['basedOn'] = [
+            [
+                'reference' => 'ServiceRequest/' . $serviceRequestId
+            ]
+        ];
+    }
+
+
     /**
      * Visit data where observation results are obtained
      *
@@ -219,12 +271,29 @@ class Observation extends OAuth2Client
             throw new FHIRMissingProperty('Code is required.');
         }
 
+        if (! array_key_exists('performer', $this->observation)) {
+            throw new FHIRMissingProperty('Performer is required.');
+        }
+
         if (! array_key_exists('subject', $this->observation)) {
             throw new FHIRMissingProperty('Subject is required.');
         }
 
         if (! array_key_exists('encounter', $this->observation)) {
             throw new FHIRMissingProperty('Encounter is required.');
+        }
+
+        // lab validation
+        $isLabCategory = array_filter($this->observation['category'], function ($cat) {
+            return $cat['coding'][0]['code'] === 'laboratory';
+        });
+
+        if ($isLabCategory && !array_key_exists('basedOn', $this->observation)) {
+            throw new FHIRMissingProperty('Service Request (baseOn) is required.');
+        }
+
+        if ($isLabCategory && !array_key_exists('specimen', $this->observation)) {
+            throw new FHIRMissingProperty('Specimen is required.');
         }
 
         return json_encode($this->observation, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
