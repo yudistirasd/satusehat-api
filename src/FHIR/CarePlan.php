@@ -7,23 +7,22 @@ use Satusehat\Integration\OAuth2Client;
 class CarePlan extends OAuth2Client
 {
     public array $carePlan = [
-        "resourceType" => "CarePlan",
-        "status" => "active",
-        "intent" => "plan",
-        "category" => [
+        'resourceType' => 'CarePlan',
+        'status' => 'active',
+        'intent' => 'plan',
+        'category' => [
             [
-                "coding" => [
+                'coding' => [
                     [
-                        "system" => "http://snomed.info/sct",
-                        "code" => "736271009",
-                        "display" => "Outpatient care plan"
-                    ]
-                ]
-            ]
+                        'system' => 'http://snomed.info/sct',
+                        'code' => '736271009',
+                        'display' => 'Outpatient care plan',
+                    ],
+                ],
+            ],
         ],
-        "title" => "Rencana Rawat Pasien"
+        'title' => 'Rencana Rawat Pasien',
     ];
-
 
     public function setDescription($description)
     {

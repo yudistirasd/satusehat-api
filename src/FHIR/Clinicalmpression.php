@@ -7,17 +7,17 @@ use Satusehat\Integration\OAuth2Client;
 class ClinicalImpression extends OAuth2Client
 {
     public array $clinicalImpression = [
-        "resourceType" => "ClinicalImpression",
-        "status" => "completed",
-        "code" => [
-            "coding" => [
+        'resourceType' => 'ClinicalImpression',
+        'status' => 'completed',
+        'code' => [
+            'coding' => [
                 [
-                    "system" => "http://snomed.info/sct",
-                    "code" => "312850006",
-                    "display" => "History of disorder"
-                ]
-            ]
-        ]
+                    'system' => 'http://snomed.info/sct',
+                    'code' => '312850006',
+                    'display' => 'History of disorder',
+                ],
+            ],
+        ],
     ];
 
     public function setIdentifier($identifier)

@@ -13,9 +13,9 @@ class AllergyIntolerance extends OAuth2Client
                 [
                     'system' => 'http://terminology.hl7.org/CodeSystem/allergyintolerance-verification',
                     'code' => 'confirmed',
-                    'display' => 'Confirmed'
-                ]
-            ]
+                    'display' => 'Confirmed',
+                ],
+            ],
         ],
     ];
 
@@ -47,15 +47,15 @@ class AllergyIntolerance extends OAuth2Client
 
     public function setCoding($system, $code, $display, $text)
     {
-        $this->allergy['code'] =  [
+        $this->allergy['code'] = [
             'coding' => [
                 [
                     'system' => $system,
                     'code' => $code,
-                    'display' => $display
-                ]
+                    'display' => $display,
+                ],
             ],
-            'text' => $text
+            'text' => $text,
         ];
     }
 
@@ -63,7 +63,7 @@ class AllergyIntolerance extends OAuth2Client
     {
         $this->allergy['recorder'] = [
             'reference' => 'Practitioner/' . $practitionerId,
-            'display' => $practitionerDisplay
+            'display' => $practitionerDisplay,
         ];
 
         $this->allergy['recordedDate'] = gmdate("Y-m-d\TH:i:sP");
@@ -73,9 +73,9 @@ class AllergyIntolerance extends OAuth2Client
     {
 
         $display = match ($code) {
-            "active" => "Active",
-            "inactive" => "Inactive",
-            "resolved" => "Resolved"
+            'active' => 'Active',
+            'inactive' => 'Inactive',
+            'resolved' => 'Resolved'
         };
 
         $this->allergy['clinicalStatus'] = [
@@ -83,9 +83,9 @@ class AllergyIntolerance extends OAuth2Client
                 [
                     'system' => 'http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical',
                     'code' => $code,
-                    'display' => $display
-                ]
-            ]
+                    'display' => $display,
+                ],
+            ],
         ];
     }
 

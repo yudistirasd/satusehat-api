@@ -15,19 +15,19 @@ class Composition extends OAuth2Client
                     [
                         'system' => 'http://loinc.org',
                         'code' => 'LP173421-1',
-                        'display' => 'Report'
-                    ]
-                ]
-            ]
+                        'display' => 'Report',
+                    ],
+                ],
+            ],
         ],
         'type' => [
             'coding' => [
                 [
                     'system' => 'http://loinc.org',
                     'code' => '88645-7',
-                    'display' => 'Outpatient hospital Discharge summary'
-                ]
-            ]
+                    'display' => 'Outpatient hospital Discharge summary',
+                ],
+            ],
         ],
     ];
 
@@ -66,8 +66,8 @@ class Composition extends OAuth2Client
     {
         $this->composition['author'] = [
             [
-                'reference' => 'Practitioner/' . $practitionerId
-            ]
+                'reference' => 'Practitioner/' . $practitionerId,
+            ],
         ];
     }
 
