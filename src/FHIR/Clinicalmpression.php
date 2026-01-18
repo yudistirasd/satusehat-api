@@ -23,7 +23,7 @@ class ClinicalImpression extends OAuth2Client
     public function setIdentifier($identifier)
     {
         $this->clinicalImpression['identifier'][] = [
-            'system' => 'http://sys-ids.kemkes.go.id/allergy/' . $this->organization_id,
+            'system' => 'http://sys-ids.kemkes.go.id/clinicalimpression/' . $this->organization_id,
             'value' => $identifier,
         ];
     }
