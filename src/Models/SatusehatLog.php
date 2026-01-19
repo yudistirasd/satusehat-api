@@ -24,8 +24,14 @@ class SatusehatLog extends Model
 
     public function __construct(array $attributes = [])
     {
-        if (! isset($this->connection)) {
-            $this->setConnection(config('satusehatintegration.database_connection_satusehat'));
+        $connection = config('satusehatintegration.database_connection_satusehat');
+
+        if (!empty($connection)) {
+            $this->setConnection($connection);
+        }
+
+        if ($connection) {
+            $this->setConnection($connection);
         }
 
         if (! isset($this->table)) {
@@ -39,6 +45,12 @@ class SatusehatLog extends Model
 
     public $incrementing = false;
 
-    protected $casts = ['response_id' => 'string', 'action' => 'string', 'url' => 'string',
-        'payload' => 'array', 'response' => 'array', 'user_id' => 'string'];
+    protected $casts = [
+        'response_id' => 'string',
+        'action' => 'string',
+        'url' => 'string',
+        'payload' => 'array',
+        'response' => 'array',
+        'user_id' => 'string'
+    ];
 }

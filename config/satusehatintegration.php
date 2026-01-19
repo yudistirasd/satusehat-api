@@ -2,6 +2,12 @@
 
 return [
 
+    'enable' => env('SATUSEHAT_ENABLE', true),
+    'env' => env('SATUSEHAT_ENV', 'DEV'),
+    'client_id_DEV' => env('CLIENTID_DEV'),
+    'client_secret_DEV' => env('CLIENTSECRET_DEV'),
+    'organization_id_DEV' => env('ORGID_DEV'),
+
     /*
      * This is the name of the table that will be created by the migration and
      * used by the Activity model shipped with this package.

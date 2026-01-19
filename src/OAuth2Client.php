@@ -50,16 +50,13 @@ class OAuth2Client
 
     public function __construct()
     {
-        // Load .env jika belum dimuat
-        $dotenv = Dotenv::createUnsafeImmutable(getcwd());
-        $dotenv->safeLoad();
 
         // Satusehat enabled (default true)
-        $v = getenv('SATUSEHAT_ENABLE');
+        $v = config('satusehatintegration.enable', true);
         $this->satusehat_enable = ($v === false || $v === '') ? true : filter_var($v, FILTER_VALIDATE_BOOLEAN);
 
         $this->override = config('satusehatintegration.ss_parameter_override');
-        $this->satusehat_env = getenv('SATUSEHAT_ENV');
+        $this->satusehat_env = config('satusehatintegration.env', 'DEV');
 
         // Validasi environment awal
         if (empty($this->satusehat_env) && ! $this->override) {
@@ -87,8 +84,8 @@ class OAuth2Client
         $this->validateCredentials();
 
         // Endpoint default (bisa diubah dari ENV)
-        $authEndpoint = getenv('SATUSEHAT_AUTH_ENDPOINT') ?: '/oauth2/v1';
-        $fhirEndpoint = getenv('SATUSEHAT_FHIR_ENDPOINT') ?: '/fhir-r4/v1';
+        $authEndpoint = config('satusehatintegration.auth_endpoint', '/oauth2/v1');
+        $fhirEndpoint = config('satusehatintegration.fhir_endpoint', '/fhir-r4/v1');
 
         // Final endpoint URLs
         $this->auth_url = $this->base_url . $authEndpoint;
@@ -105,10 +102,10 @@ class OAuth2Client
             'PROD' => 'https://api-satusehat.kemkes.go.id',
         ];
 
-        $this->base_url = getenv("SATUSEHAT_BASE_URL_{$env}") ?: $defaults[$env];
-        $this->client_id = getenv("CLIENTID_{$env}");
-        $this->client_secret = getenv("CLIENTSECRET_{$env}");
-        $this->organization_id = getenv("ORGID_{$env}");
+        $this->base_url = config("satusehatintegration.base_url_{$env}", $defaults[$env]);
+        $this->client_id = config("satusehatintegration.client_id_{$env}");
+        $this->client_secret = config("satusehatintegration.client_secret_{$env}");
+        $this->organization_id = config("satusehatintegration.organization_id_{$env}");
     }
 
     protected function applyProfileOverride(): void
