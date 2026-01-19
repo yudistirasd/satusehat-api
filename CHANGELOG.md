@@ -1,5 +1,24 @@
 # Changelog
 
+## v2.0.0 - 2026-01-19
+
+### v2.0.0
+
+Refactor pengambilan config env
+
+#### 🛠 Perubahan Utama:
+
+* **Refactor Konfigurasi:** Migrasi dari `env()` ke `config()` untuk mendukung `php artisan config:cache`.
+* **Support Multi-tenancy:** Dukungan penggunaan koneksi database default jika koneksi di config dikosongkan (kompatibel dengan `stancl/tenancy`).
+
+#### ⚠️ Penting (Breaking Change):
+
+Setelah update ke versi ini, Anda **wajib** mempublikasikan file konfigurasi baru agar aplikasi tetap berjalan normal:
+
+```bash
+php artisan vendor:publish --tag=satusehat-api-config
+
+```
 ## 1.0 - 2025-10-19
 
 **Full Changelog**: https://github.com/yudistirasd/satusehat-api/commits/1.0
@@ -386,6 +405,7 @@ class BaseController extends Controller
 
 
 
+
 ```
 v1.2.x :
 
@@ -500,6 +520,7 @@ class BaseController extends Controller
         return $ss_oauth2;
     }
 }
+
 
 
 
