@@ -2,7 +2,6 @@
 
 namespace Satusehat\Integration;
 
-use Dotenv\Dotenv;
 use GuzzleHttp\Client;
 // Guzzle HTTP Package
 use GuzzleHttp\Exception\ClientException;

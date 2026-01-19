@@ -20,7 +20,7 @@ class SatusehatToken extends Model
     {
         $connection = config('satusehatintegration.database_connection_satusehat');
 
-        if (!empty($connection)) {
+        if (! empty($connection)) {
             $this->setConnection($connection);
         }
 

@@ -26,7 +26,7 @@ class SatusehatLog extends Model
     {
         $connection = config('satusehatintegration.database_connection_satusehat');
 
-        if (!empty($connection)) {
+        if (! empty($connection)) {
             $this->setConnection($connection);
         }
 
@@ -51,6 +51,6 @@ class SatusehatLog extends Model
         'url' => 'string',
         'payload' => 'array',
         'response' => 'array',
-        'user_id' => 'string'
+        'user_id' => 'string',
     ];
 }
