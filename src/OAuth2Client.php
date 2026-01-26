@@ -6,13 +6,12 @@ use GuzzleHttp\Client;
 // Guzzle HTTP Package
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Request;
-use Satusehat\Integration\Exception\Helper\OAuth2ClientException;
+use Illuminate\Support\Facades\Cache;
 // SATUSEHAT Model & Log
+use Satusehat\Integration\Exception\Helper\OAuth2ClientException;
 use Satusehat\Integration\Models\SatusehatLog;
 use Satusehat\Integration\Models\SatuSehatProfileFasyankes;
 use Satusehat\Integration\Models\SatusehatToken;
-
-use Illuminate\Support\Facades\Cache;
 
 class OAuth2Client
 {
