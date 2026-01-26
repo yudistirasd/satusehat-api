@@ -7,6 +7,7 @@ return [
     'client_id_DEV' => env('CLIENTID_DEV'),
     'client_secret_DEV' => env('CLIENTSECRET_DEV'),
     'organization_id_DEV' => env('ORGID_DEV'),
+    'cache_driver' => env('SATUSEHAT_CACHE_DRIVER', 'file'),
 
     /*
      * This is the name of the table that will be created by the migration and

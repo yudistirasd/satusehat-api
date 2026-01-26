@@ -5,12 +5,8 @@ namespace Satusehat\Integration\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Satusehat\Integration\Models\SatusehatToken.
- *
- * @property string $environment
- * @property string $token
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @deprecated This model is no longer used and will be removed in v3.0.0.
+ * Token storage has been moved to Laravel Cache.
  */
 class SatusehatToken extends Model
 {

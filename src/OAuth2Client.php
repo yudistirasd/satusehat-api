@@ -12,6 +12,8 @@ use Satusehat\Integration\Models\SatusehatLog;
 use Satusehat\Integration\Models\SatuSehatProfileFasyankes;
 use Satusehat\Integration\Models\SatusehatToken;
 
+use Illuminate\Support\Facades\Cache;
+
 class OAuth2Client
 {
     use Tenant;
@@ -138,11 +140,26 @@ class OAuth2Client
             return null;
         }
 
-        $token = SatusehatToken::where('environment', $this->satusehat_env)->where('client_id', $this->client_id)->orderBy('created_at', 'desc')
-            ->where('created_at', '>', now()->subMinutes(50))->first();
+        $cacheKey = "satusehat_token_{$this->satusehat_env}_{$this->client_id}";
+        $driver = config('satusehat.cache_driver', 'file');
+
+        $token = Cache::store($driver)->get($cacheKey);
 
         if ($token) {
-            return $token->token;
+            return $token;
+        }
+
+        $dbToken = SatusehatToken::where('environment', $this->satusehat_env)
+            ->where('client_id', $this->client_id)
+            ->where('created_at', '>', now()->subMinutes(50))
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if ($dbToken) {
+            // Sync back to cache so next request hits cache instead of DB
+            Cache::store($driver)->put($cacheKey, $dbToken->token, now()->addMinutes(50));
+
+            return $dbToken->token;
         }
 
         $client = new Client;
@@ -166,11 +183,14 @@ class OAuth2Client
             $contents = json_decode($res->getBody()->getContents());
 
             if (isset($contents->access_token)) {
-                SatusehatToken::create([
-                    'environment' => $this->satusehat_env,
-                    'client_id' => $this->client_id,
-                    'token' => $contents->access_token,
-                ]);
+                // Store in Cache
+                Cache::store($driver)->put($cacheKey, $contents->access_token, now()->addMinutes(50));
+
+                // Update Database (Preventing bloating using updateOrCreate)
+                SatusehatToken::updateOrCreate(
+                    ['environment' => $this->satusehat_env, 'client_id' => $this->client_id],
+                    ['token' => $contents->access_token, 'created_at' => now()]
+                );
 
                 return $contents->access_token;
             } else {
