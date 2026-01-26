@@ -11,6 +11,7 @@ class PruneSatusehatLog extends Command
     protected $signature = 'satusehat:prune-logs
                             {--days=60 : Jumlah hari log yang dipertahankan}
                             {--all : Menghapus seluruh data log tanpa kecuali}';
+
     protected $description = 'Membersihkan data Satusehat Log yang sudah lama secara bertahap';
 
     public function handle()
@@ -23,9 +24,10 @@ class PruneSatusehatLog extends Command
         $query = SatusehatLog::query();
 
         if ($all) {
-            $this->warn("PERINGATAN: Anda memilih untuk menghapus SELURUH data log.");
-            if (!$this->confirm('Apakah Anda yakin ingin melanjutkan?', false)) {
+            $this->warn('PERINGATAN: Anda memilih untuk menghapus SELURUH data log.');
+            if (! $this->confirm('Apakah Anda yakin ingin melanjutkan?', false)) {
                 $this->comment('Operasi dibatalkan.');
+
                 return 0;
             }
         } else {
@@ -38,6 +40,7 @@ class PruneSatusehatLog extends Command
 
         if ($totalToDelete === 0) {
             $this->comment('Tidak ada log yang perlu dihapus.');
+
             return 0;
         }
 
@@ -57,7 +60,7 @@ class PruneSatusehatLog extends Command
 
         $bar->finish();
         $this->newLine();
-        $this->info("Pembersihan selesai!");
+        $this->info('Pembersihan selesai!');
 
         return 0;
     }
