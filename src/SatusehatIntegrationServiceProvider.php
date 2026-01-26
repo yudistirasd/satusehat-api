@@ -3,11 +3,19 @@
 namespace Satusehat\Integration;
 
 use Illuminate\Support\ServiceProvider;
+use Satusehat\Integration\Commands\PruneSatusehatLog;
 
 class SatusehatIntegrationServiceProvider extends ServiceProvider
 {
     public function boot()
     {
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                PruneSatusehatLog::class,
+            ]);
+        }
+
         // Publish Config
         $this->publishes([
             __DIR__ . '/../config/satusehatintegration.php' => config_path('satusehatintegration.php'),
