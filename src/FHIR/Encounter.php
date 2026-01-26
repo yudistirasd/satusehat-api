@@ -161,9 +161,9 @@ class Encounter extends OAuth2Client
                 [
                     'system' => $system,
                     'code' => $code,
-                    'display' => $display
-                ]
-            ]
+                    'display' => $display,
+                ],
+            ],
         ];
     }
 
