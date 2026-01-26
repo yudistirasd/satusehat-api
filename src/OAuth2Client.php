@@ -140,9 +140,8 @@ class OAuth2Client
         }
 
         $cacheKey = "satusehat_token_{$this->satusehat_env}_{$this->client_id}";
-        $driver = config('satusehat.cache_driver', 'file');
 
-        $token = Cache::store($driver)->get($cacheKey);
+        $token = Cache::get($cacheKey);
 
         if ($token) {
             return $token;
@@ -156,7 +155,7 @@ class OAuth2Client
 
         if ($dbToken) {
             // Sync back to cache so next request hits cache instead of DB
-            Cache::store($driver)->put($cacheKey, $dbToken->token, now()->addMinutes(50));
+            Cache::put($cacheKey, $dbToken->token, now()->addMinutes(50));
 
             return $dbToken->token;
         }
@@ -183,7 +182,7 @@ class OAuth2Client
 
             if (isset($contents->access_token)) {
                 // Store in Cache
-                Cache::store($driver)->put($cacheKey, $contents->access_token, now()->addMinutes(50));
+                Cache::put($cacheKey, $contents->access_token, now()->addMinutes(50));
 
                 // Update Database (Preventing bloating using updateOrCreate)
                 SatusehatToken::updateOrCreate(
