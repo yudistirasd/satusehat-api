@@ -154,12 +154,16 @@ class Encounter extends OAuth2Client
         $this->encounter['subject']['display'] = $name;
     }
 
-    public function setServiceType($code, $display)
+    public function setServiceType($system, $code, $display)
     {
-        $this->encounter['serviceType']['coding'][] = [
-            'system' => 'http://terminology.hl7.org/CodeSystem/service-type',
-            'code' => $code,
-            'display' => $display,
+        $this->encounter['serviceType'] = [
+            'coding' => [
+                [
+                    'system' => $system,
+                    'code' => $code,
+                    'display' => $display
+                ]
+            ]
         ];
     }
 
