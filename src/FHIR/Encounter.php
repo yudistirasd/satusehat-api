@@ -154,6 +154,15 @@ class Encounter extends OAuth2Client
         $this->encounter['subject']['display'] = $name;
     }
 
+    public function setServiceType($code, $display)
+    {
+        $this->encounter['serviceType']['coding'][] = [
+            'system' => 'http://terminology.hl7.org/CodeSystem/service-type',
+            'code' => $code,
+            'display' => $display,
+        ];
+    }
+
     public function addParticipant($participantId, $name, $type = 'ATND', $display = 'attender')
     {
         $participant['individual']['reference'] = 'Practitioner/' . $participantId;
