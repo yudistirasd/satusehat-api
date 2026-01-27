@@ -53,7 +53,7 @@ class OAuth2Client
 
         // Satusehat enabled (default true)
         $v = config('satusehatintegration.enable', true);
-        $this->satusehat_enable = ($v === false || $v === '') ? true : filter_var($v, FILTER_VALIDATE_BOOLEAN);
+        $this->satusehat_enable = filter_var($v, FILTER_VALIDATE_BOOLEAN);
 
         $this->override = config('satusehatintegration.ss_parameter_override');
         $this->satusehat_env = config('satusehatintegration.env', 'DEV');
