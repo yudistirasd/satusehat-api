@@ -313,7 +313,7 @@ class OAuth2Client
             ['birthdate', 'gender', 'name'],
             ['birthdate', 'identifier', 'name'],
             ['identifier', 'name'],
-            ['identifier']
+            ['identifier'],
         ];
 
         // validasi kombinasi
@@ -325,21 +325,21 @@ class OAuth2Client
             }
         }
 
-        if (!$isValidCombo) {
+        if (! $isValidCombo) {
             throw new \InvalidArgumentException(
-                "Kombinasi parameter tidak didukung SatuSehat. Pilih salah satu: " .
-                    "[name, birthdate, gender], [name, birthdate, identifier], [name, identifier] atau [nik]."
+                'Kombinasi parameter tidak didukung SatuSehat. Pilih salah satu: ' .
+                    '[name, birthdate, gender], [name, birthdate, identifier], [name, identifier] atau [nik].'
             );
         }
 
         // validasi value
         foreach ($query as $key => $value) {
-            if (is_null($value) || trim((string)$value) === '') {
+            if (is_null($value) || trim((string) $value) === '') {
                 throw new \InvalidArgumentException("Value untuk parameter '$key' tidak boleh kosong.");
             }
         }
 
-        if (!empty($query['identifier'])) {
+        if (! empty($query['identifier'])) {
             $query['identifier'] = 'https://fhir.kemkes.go.id/id/nik|' . $query['identifier'];
         }
 
