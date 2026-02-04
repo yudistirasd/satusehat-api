@@ -277,4 +277,13 @@ class Encounter extends OAuth2Client
 
         return [$statusCode, $res];
     }
+
+    public function patch($id, $payload)
+    {
+        $this->encounter['id'] = $id;
+
+        [$statusCode, $res] = $this->ss_patch('Encounter', $id, json_encode($payload));
+
+        return [$statusCode, $res];
+    }
 }
