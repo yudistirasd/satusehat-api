@@ -302,6 +302,87 @@ class OAuth2Client
         }
     }
 
+    public function getPatientByQuery(array $query = [])
+    {
+
+        $queryKeys = array_keys($query);
+
+        sort($queryKeys);
+
+        $allowedCombinations = [
+            ['birthdate', 'gender', 'name'],
+            ['birthdate', 'identifier', 'name'],
+            ['identifier', 'name'],
+            ['identifier']
+        ];
+
+        // validasi kombinasi
+        $isValidCombo = false;
+        foreach ($allowedCombinations as $combination) {
+            if ($queryKeys === $combination) {
+                $isValidCombo = true;
+                break;
+            }
+        }
+
+        if (!$isValidCombo) {
+            throw new \InvalidArgumentException(
+                "Kombinasi parameter tidak didukung SatuSehat. Pilih salah satu: " .
+                    "[name, birthdate, gender], [name, birthdate, identifier], [name, identifier] atau [nik]."
+            );
+        }
+
+        // validasi value
+        foreach ($query as $key => $value) {
+            if (is_null($value) || trim((string)$value) === '') {
+                throw new \InvalidArgumentException("Value untuk parameter '$key' tidak boleh kosong.");
+            }
+        }
+
+        if (!empty($query['identifier'])) {
+            $query['identifier'] = 'https://fhir.kemkes.go.id/id/nik|' . $query['identifier'];
+        }
+
+        $access_token = $this->token();
+
+        if (! isset($access_token)) {
+            return $this->respondError($this->oauth2_error);
+        }
+
+        $client = new Client;
+        $headers = [
+            'Authorization' => 'Bearer ' . $access_token,
+        ];
+
+        $queryString = http_build_query($query);
+
+        $url = $this->fhir_url . '/Patient?' . $queryString;
+
+        $request = new Request('GET', $url, $headers);
+
+        try {
+            $res = $client->sendAsync($request)->wait();
+            $statusCode = $res->getStatusCode();
+            $response = json_decode($res->getBody()->getContents());
+
+            if ($response->resourceType == 'OperationOutcome' | $response->total == 0) {
+                $id = 'Not Found';
+            } else {
+                $id = $response->entry['0']->resource->id;
+            }
+            $this->log('Patient', $id, 'GET', $url, null, (array) $response);
+
+            return [$statusCode, $response];
+        } catch (ClientException $e) {
+            $statusCode = $e->getResponse()->getStatusCode();
+            $res = json_decode($e->getResponse()->getBody()->getContents());
+
+            $this->log('Patient', 'Error ' . $statusCode, 'GET', $url, null, (array) $res);
+
+            return [$statusCode, $res];
+        }
+    }
+
     /**
      * Get request to SATUSEHAT master data resource
      *
