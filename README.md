@@ -1,51 +1,126 @@
-# Build SATUSEHAT FHIR Object in Easy Way
+# SATUSEHAT Integration for Laravel
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/ivanwilliammd/satusehat-integration.svg?style=flat-square)](https://packagist.org/packages/ivanwilliammd/satusehat-integration)
-[![Tests](https://img.shields.io/github/actions/workflow/status/ivanwilliammd/satusehat-integration/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/ivanwilliammd/satusehat-integration/actions/workflows/run-tests.yml)
-[![Total Downloads](https://img.shields.io/packagist/dt/ivanwilliammd/satusehat-integration.svg?style=flat-square)](https://packagist.org/packages/ivanwilliammd/satusehat-integration)
+[![Latest Version](https://img.shields.io/packagist/v/yudistira/satusehat-api.svg?style=flat-square)](https://packagist.org/packages/yudistira/satusehat-api)
+[![Total Downloads](https://img.shields.io/packagist/dt/yudistira/satusehat-api.svg?style=flat-square)](https://packagist.org/packages/yudistira/satusehat-api)
+[![License](https://img.shields.io/packagist/l/yudistira/satusehat-api.svg?style=flat-square)](LICENSE.md)
+[![PHP Version](https://img.shields.io/packagist/php-v/yudistira/satusehat-api.svg?style=flat-square)](composer.json)
 
-This package is a community-maintained fork of [ivanwilliammd/satusehat-api](https://github.com/ivanwilliammd/satusehat-integration)
-, updated to support the latest SATUSEHAT API without subscription requirement.
+Library Laravel untuk integrasi SATUSEHAT Kemenkes RI. Generate FHIR-ready JSON sesuai profil [SATUSEHAT Documentation](https://satusehat.kemkes.go.id/platform/docs).
 
-## Introduction
-- This unofficial SATUSEHAT FHIR PHP Library to help generate SATUSEHAT FHIR-ready JSON, using profile established by [SATUSEHAT Documentation](https://satusehat.kemkes.go.id/platform/docs).
-- This repository is rapidly developing and need help. Please kindly comment in [Issue](https://github.com/ivanwilliammd/satusehat-integration/issues) section to contribute or Sponsor this project.
-- Features supported --> see [Wiki](https://github.com/ivanwilliammd/satusehat-integration/wiki/Features)
-- Error type from SATUSEHAT --> see [PUBLISHED - Dokumen Kamus Rule Number (Error Code)](https://docs.google.com/spreadsheets/d/1vnYFL2Ho1lICEgWmE2HFwkbEgiRvw1uaYBBW8NvwzjI/edit?gid=927500518#gid=927500518)
+## Mengapa Package Ini?
 
-## SATUSEHAT dissemination summary
-- Update (19/9/2024) : Medication is attached to MedicationRequest and MedicationDispense
-- Update (21/11/2024):
-    - SATUSEHAT implements multiple role access with restriction on each API service --> [Resource Access](https://drive.google.com/file/d/1bs8uU_nIuNqHohnRfTvFHx0o2qOgAYabAz0ptUC3w9s/view)
-    - Data privacy security update, which will censored Patient and Practitioner name
-    - Patient and Practitioner reference in ```Encounter.subject.display``` and ```Encounter.participant.individual``` must be same with Master Patient Index (Patient GET) and Master Nakes Index (Practitioner GET)
+- Open-source (MIT license), gratis dipakai termasuk untuk komersial
+- Mendukung 19 FHIR resource (Patient, Encounter, Bundle, dst)
+- OAuth2 token caching otomatis via Laravel Cache
+- Multi-tenant via `Tenant` trait
+- KYC Centang Biru
+- Sandbox mode dengan ID pasien dan nakes development
+- Tested di Laravel 8 sampai 12
 
-## Example Laravel 10 Project with SATUSEHAT Integration
-See ```satusehat-integration``` library in action [here](https://github.com/ivanwilliammd/satusehat-laravel-example)
+## Quick Start
 
-## Want to contribute?
-- See how to contribute at this [page](CONTRIBUTING.md).<br>
-- All contribution will be reviewed by [@ivanwilliammd](https://github.com/ivanwilliammd). Any invalid pull request will be commented, and decided directly whether will need further correction or directly closed as invalid.
+### 1. Install via Composer
 
-## Quick Installation
-See Quick Installation Instructions [here](https://github.com/ivanwilliammd/satusehat-integration/wiki/Installation)<br>
-Feel your first time using this library at Onboarding page [here](https://github.com/ivanwilliammd/satusehat-integration/wiki/Onboarding)
+```bash
+composer require yudistira/satusehat-api
+```
 
-## Features
-See the feature Wiki page [here](https://github.com/ivanwilliammd/satusehat-integration/wiki/Features)
+### 2. Publish Config dan Migration
 
-## Full usage guide
-Fully documented usage guide could be found on the Usage Wiki section [here](https://github.com/ivanwilliammd/SATUSEHAT-integration/wiki/Usage)
+```bash
+php artisan vendor:publish --provider="Satusehat\Integration\SatusehatIntegrationServiceProvider"
+php artisan migrate
+```
 
-## Changelog
+### 3. Set Environment Variables
 
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+Daftarkan aplikasi Anda di [portal SATUSEHAT](https://satusehat.kemkes.go.id/) menu **Pengembang > Aplikasi**, lalu tambahkan kredensial berikut ke file `.env`:
+
+| Variable | Deskripsi |
+|---|---|
+| `SATUSEHAT_ENV` | `DEV` untuk sandbox, `PROD` untuk production |
+| `SATUSEHAT_CLIENT_ID` | Client ID dari portal SATUSEHAT |
+| `SATUSEHAT_CLIENT_SECRET` | Client Secret dari portal SATUSEHAT |
+| `SATUSEHAT_ORGANIZATION_ID` | Organization ID fasyankes Anda |
+
+### 4. Contoh: Buat Resource Patient
+
+```php
+use Satusehat\Integration\FHIR\Patient;
+
+$patient = new Patient();
+$patient->addIdentifier('nik', '3174012345678901');
+$patient->setName('Budi Setiawan');
+$patient->setGender('male');
+$patient->setBirthDate('1990-01-15');
+
+$json = $patient->json();
+```
+
+### 5. Contoh: Kirim Bundle Kunjungan (Encounter + Diagnosis)
+
+```php
+use Satusehat\Integration\FHIR\Bundle;
+use Satusehat\Integration\FHIR\Encounter;
+use Satusehat\Integration\FHIR\Condition;
+
+$encounter = new Encounter();
+// ... isi data encounter
+
+$diagnosis = new Condition();
+// ... isi data diagnosis
+
+$bundle = new Bundle();
+$bundle->addEncounter($encounter);
+$bundle->addCondition($diagnosis);
+
+$response = $bundle->post();
+```
+
+Dokumentasi lengkap per resource ada di folder [`docs/`](docs/).
+
+## FHIR Resources Tersedia (19)
+
+`Patient`, `Practitioner`, `Encounter`, `Condition`, `Observation`, `Procedure`, `Medication`, `MedicationRequest`, `MedicationDispense`, `AllergyIntolerance`, `ClinicalImpression`, `Composition`, `DiagnosticReport`, `ServiceRequest`, `Specimen`, `CarePlan`, `Location`, `Organization`, `Bundle`
+
+## Persyaratan
+
+- PHP 7.4 atau 8.0+
+- Laravel 8 / 9 / 10 / 11 / 12
+- Akun developer SATUSEHAT ([daftar di sini](https://satusehat.kemkes.go.id/))
+
+## Roadmap
+
+- [ ] Dokumentasi lengkap per resource di `/docs`
+- [ ] Contoh project Laravel end-to-end
+- [ ] Test coverage untuk semua FHIR resource
+- [ ] Migration helper dari format legacy
+
+## Need Help?
+
+Package ini gratis dan open-source. Kalau Anda butuh:
+
+- Custom integration SATUSEHAT untuk SaaS klinik atau RS
+- Konsultasi compliance SATUSEHAT
+- Bridging BPJS (VClaim, PCare, Antrean) - lihat [bpjs-api](https://github.com/yudistirasd/bpjs-api)
+
+Email: **yudistira.sd2@gmail.com**
+
+## Contributing
+
+Kontribusi welcome. Lihat [CONTRIBUTING.md](CONTRIBUTING.md).
+
+Bug report dan feature request via [Issues](https://github.com/yudistirasd/satusehat-api/issues).
 
 ## Credits
 
-Active contributor (> 1 PR per quarter):
-1. [Dr. dr. Ivan William Harsono, MTI](https://github.com/ivanwilliammd)
-2. ... Looking for volunteer for active contribution ...
+- Original work: [ivanwilliammd/satusehat-integration](https://github.com/ivanwilliammd/satusehat-integration) by Dr. dr. Ivan William Harsono, MTI
+- Maintained dan updated for latest SATUSEHAT API by [@yudistirasd](https://github.com/yudistirasd)
 
 ## License
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+
+[MIT License](LICENSE.md). Bebas dipakai termasuk untuk komersial.
+
+---
+
+**Maintained by [Yudistira SD](https://github.com/yudistirasd)** - Laravel developer Indonesia. Spesialis integrasi healthcare API (SATUSEHAT, BPJS) untuk SaaS klinik.
