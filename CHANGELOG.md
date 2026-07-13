@@ -5,6 +5,7 @@
 ### Added
 - Menambahkan opsi konfigurasi `'log' => env('SATUSEHAT_LOG', true)` di `config/satusehatintegration.php` dan implementasinya di `OAuth2Client::log` untuk mengaktifkan/menonaktifkan logging aktivitas API.
 - Menambahkan GitHub Action workflow `.github/workflows/publish_wiki.yml` dan script `.github/scripts/publish_wiki.py` untuk meratakan (flatten) dan mempublikasikan dokumentasi secara otomatis dari folder `docs` ke GitHub Wiki pada saat push ke branch `main`.
+- Menambahkan [docs/index.html](file:///D:/laragon/www/satusehat-api/docs/index.html) sebagai Single Page Application (SPA) pembaca dokumentasi berbasis client-side untuk deploy langsung ke GitHub Pages (tanpa build step).
 
 ## v2.0.0 - 2026-01-19
 

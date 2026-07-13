@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dokumentasi SATUSEHAT Integration</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              300: '#c4b5fd',
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#5b21b6',
+              900: '#4c1d95',
+              950: '#2e1065',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Fira Code', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Prism.js for syntax highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <!-- Marked.js for markdown parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* Custom Markdown Styles */
+    .prose h1 { @apply text-3xl font-extrabold text-slate-900 dark:text-white mb-6 border-b border-slate-200 dark:border-slate-800 pb-3 mt-4; }
+    .prose h2 { @apply text-2xl font-bold text-slate-900 dark:text-white mt-10 mb-4 border-b border-slate-100 dark:border-slate-800/50 pb-2; }
+    .prose h3 { @apply text-xl font-semibold text-slate-900 dark:text-white mt-8 mb-3; }
+    .prose p { @apply text-slate-600 dark:text-slate-300 leading-relaxed mb-4; }
+    .prose ul { @apply list-disc list-inside text-slate-600 dark:text-slate-300 mb-4 space-y-2 pl-2; }
+    .prose ol { @apply list-decimal list-inside text-slate-600 dark:text-slate-300 mb-4 space-y-2 pl-2; }
+    .prose li > ul, .prose li > ol { @apply pl-6 mt-2 mb-0; }
+    .prose a { @apply text-primary-600 dark:text-primary-400 font-medium hover:underline; }
+    .prose code { @apply font-mono text-sm px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-200; }
+    .prose pre { @apply my-6 rounded-lg overflow-x-auto border border-slate-200 dark:border-slate-800 bg-slate-950 p-4 text-white relative; }
+    .prose pre code { @apply p-0 bg-transparent text-white dark:bg-transparent rounded-none text-xs leading-relaxed; }
+    .prose table { @apply w-full text-left border-collapse my-6 text-sm; }
+    .prose th { @apply border-b-2 border-slate-200 dark:border-slate-800 py-3 px-4 font-semibold text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-900/50; }
+    .prose td { @apply border-b border-slate-100 dark:border-slate-800/40 py-3 px-4 text-slate-600 dark:text-slate-300; }
+    .prose tr:hover td { @apply bg-slate-50/50 dark:bg-slate-900/10; }
+    .prose blockquote { @apply border-l-4 border-slate-300 dark:border-slate-700 pl-4 italic my-4 text-slate-500 dark:text-slate-400; }
+    .prose img { @apply max-w-full h-auto rounded-lg shadow-sm border border-slate-100 dark:border-slate-800 my-6; }
+    
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { @apply bg-slate-200 dark:bg-slate-800 rounded-full; }
+    ::-webkit-scrollbar-thumb:hover { @apply bg-slate-300 dark:bg-slate-700; }
+  </style>
+</head>
+<body class="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200 antialiased">
+
+  <!-- Mobile Overlay -->
+  <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/40 z-30 hidden backdrop-blur-sm lg:hidden"></div>
+
+  <!-- Top Header -->
+  <header class="sticky top-0 z-40 w-full flex-none border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md transition-colors duration-200">
+    <div class="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Mobile Toggle -->
+      <button id="sidebar-toggle" class="lg:hidden p-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 rounded-md hover:bg-slate-100 dark:hover:bg-slate-900 transition" aria-label="Toggle Sidebar">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+
+      <!-- Brand -->
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-primary-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-primary-500/20 text-white font-bold text-lg">
+          SS
+        </div>
+        <div>
+          <span class="font-bold text-slate-900 dark:text-white tracking-tight">SATUSEHAT</span>
+          <span class="text-xs block text-slate-500 dark:text-slate-400 font-medium -mt-1">Laravel Integration</span>
+        </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="flex-1 max-w-md relative hidden sm:block">
+        <i data-lucide="search" class="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+        <input id="search-input" type="text" placeholder="Cari dokumentasi..." class="w-full pl-9 pr-4 py-1.5 text-sm rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all dark:text-white placeholder-slate-400 dark:placeholder-slate-500" />
+      </div>
+
+      <!-- Controls -->
+      <div class="flex items-center gap-2">
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="p-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 rounded-md hover:bg-slate-100 dark:hover:bg-slate-900 transition">
+          <i id="theme-icon-light" data-lucide="sun" class="w-5 h-5 hidden"></i>
+          <i id="theme-icon-dark" data-lucide="moon" class="w-5 h-5"></i>
+        </button>
+        <!-- GitHub Link -->
+        <a href="https://github.com/yudistirasd/satusehat-api" target="_blank" rel="noopener noreferrer" class="p-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 rounded-md hover:bg-slate-100 dark:hover:bg-slate-900 transition" title="GitHub Repository">
+          <i data-lucide="github" class="w-5 h-5"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Layout Container -->
+  <div class="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 flex">
+    
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed top-16 bottom-0 left-0 z-30 w-72 px-6 overflow-y-auto border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 transition-all duration-300 -translate-x-full lg:translate-x-0 lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] flex-shrink-0">
+      
+      <!-- Mobile Search -->
+      <div class="my-4 sm:hidden relative">
+        <i data-lucide="search" class="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+        <input id="search-input-mobile" type="text" placeholder="Cari..." class="w-full pl-9 pr-4 py-2 text-sm rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all" />
+      </div>
+
+      <!-- Navigation Tree -->
+      <nav id="nav-tree" class="py-6 space-y-8"></nav>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="flex-1 min-w-0 py-8 lg:px-8 xl:px-12 flex flex-col md:flex-row gap-8">
+      
+      <!-- Article -->
+      <article class="flex-1 min-w-0">
+        <div id="loader" class="flex flex-col items-center justify-center py-20 gap-4">
+          <div class="w-10 h-10 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+          <span class="text-sm text-slate-500 dark:text-slate-400 font-medium">Memuat halaman...</span>
+        </div>
+        <div id="content" class="prose max-w-none dark:prose-invert hidden"></div>
+      </article>
+
+      <!-- Table of Contents (Right Sidebar) -->
+      <aside class="w-64 flex-shrink-0 hidden xl:block sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto pb-8">
+        <h4 class="text-xs font-semibold text-slate-900 dark:text-white uppercase tracking-wider mb-4">On This Page</h4>
+        <ul id="toc" class="space-y-3 text-sm text-slate-500 dark:text-slate-400 border-l border-slate-100 dark:border-slate-900 pl-4">
+          <li class="italic text-xs">Tidak ada sub-heading</li>
+        </ul>
+      </aside>
+    </main>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Sidebar Navigation Database
+    const navigation = [
+      {
+        title: "Mulai Dari Sini",
+        items: [
+          { name: "Pengantar & Konten", path: "README.md" },
+          { name: "Getting Started", path: "01-getting-started.md" }
+        ]
+      },
+      {
+        title: "FHIR Resources",
+        items: [
+          { name: "Patient", path: "resources/patient.md" },
+          { name: "Practitioner", path: "resources/practitioner.md" },
+          { name: "Organization", path: "resources/organization.md" },
+          { name: "Location", path: "resources/location.md" },
+          { name: "Encounter", path: "resources/encounter.md" },
+          { name: "Condition", path: "resources/condition.md" },
+          { name: "Procedure", path: "resources/procedure.md" },
+          { name: "ClinicalImpression", path: "resources/clinical-impression.md" },
+          { name: "Composition", path: "resources/composition.md" },
+          { name: "CarePlan", path: "resources/care-plan.md" },
+          { name: "AllergyIntolerance", path: "resources/allergy-intolerance.md" },
+          { name: "Observation", path: "resources/observation.md" },
+          { name: "ServiceRequest", path: "resources/service-request.md" },
+          { name: "Specimen", path: "resources/specimen.md" },
+          { name: "DiagnosticReport", path: "resources/diagnostic-report.md" },
+          { name: "Medication", path: "resources/medication.md" },
+          { name: "MedicationRequest", path: "resources/medication-request.md" },
+          { name: "MedicationDispense", path: "resources/medication-dispense.md" },
+          { name: "Bundle", path: "resources/bundle.md" }
+        ]
+      },
+      {
+        title: "Alur Kerja (Workflows)",
+        items: [
+          { name: "Alur Pasien Baru", path: "workflows/alur-pasien-baru.md" },
+          { name: "Alur Laboratorium", path: "workflows/alur-laboratorium.md" }
+        ]
+      }
+    ];
+
+    // Global state
+    let currentHashPath = '';
+
+    // Initialize UI Elements
+    const navTree = document.getElementById('nav-tree');
+    const contentDiv = document.getElementById('content');
+    const loaderDiv = document.getElementById('loader');
+    const tocList = document.getElementById('toc');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const searchInput = document.getElementById('search-input');
+    const searchInputMobile = document.getElementById('search-input-mobile');
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIconLight = document.getElementById('theme-icon-light');
+    const themeIconDark = document.getElementById('theme-icon-dark');
+
+    // Theme Management
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+      themeIconLight.classList.remove('hidden');
+      themeIconDark.classList.add('hidden');
+    } else {
+      document.documentElement.classList.remove('dark');
+      themeIconLight.classList.add('hidden');
+      themeIconDark.classList.remove('hidden');
+    }
+
+    themeToggle.addEventListener('click', () => {
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.theme = 'light';
+        themeIconLight.classList.add('hidden');
+        themeIconDark.classList.remove('hidden');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.theme = 'dark';
+        themeIconLight.classList.remove('hidden');
+        themeIconDark.classList.add('hidden');
+      }
+    });
+
+    // Mobile Sidebar controls
+    function toggleMobileSidebar() {
+      sidebar.classList.toggle('-translate-x-full');
+      sidebarOverlay.classList.toggle('hidden');
+    }
+
+    sidebarToggle.addEventListener('click', toggleMobileSidebar);
+    sidebarOverlay.addEventListener('click', toggleMobileSidebar);
+
+    // Build Sidebar Menu
+    function renderSidebar(filterQuery = '') {
+      navTree.innerHTML = '';
+      const query = filterQuery.toLowerCase();
+      
+      navigation.forEach(group => {
+        const filteredItems = group.items.filter(item => 
+          item.name.toLowerCase().includes(query) || 
+          item.path.toLowerCase().includes(query)
+        );
+
+        if (filteredItems.length === 0) return;
+
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'space-y-2';
+
+        const groupTitle = document.createElement('h5');
+        groupTitle.className = 'px-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider';
+        groupTitle.innerText = group.title;
+        groupDiv.appendChild(groupTitle);
+
+        const itemsList = document.createElement('ul');
+        itemsList.className = 'space-y-1';
+
+        filteredItems.forEach(item => {
+          const li = document.createElement('li');
+          const route = '#/' + item.path.replace(/\.md$/, '');
+          const isSelected = window.location.hash === route || (window.location.hash === '' && item.path === 'README.md');
+          
+          li.innerHTML = `
+            <a href="${route}" class="group flex items-center px-3 py-2 text-sm font-medium rounded-md transition duration-150 ${
+              isSelected 
+                ? 'bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400 font-semibold' 
+                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:text-slate-900 dark:hover:text-slate-200'
+            }">
+              <span class="truncate">${item.name}</span>
+            </a>
+          `;
+          itemsList.appendChild(li);
+        });
+
+        groupDiv.appendChild(itemsList);
+        navTree.appendChild(groupDiv);
+      });
+
+      // Re-trigger Lucide Icons
+      lucide.createIcons();
+    }
+
+    // Search event listeners
+    searchInput.addEventListener('input', (e) => renderSidebar(e.target.value));
+    searchInputMobile.addEventListener('input', (e) => renderSidebar(e.target.value));
+
+    // Alert renderer utility
+    function renderAlerts(html) {
+      const alerts = {
+        NOTE: { class: 'border-blue-500 bg-blue-50/50 dark:bg-blue-950/20 text-blue-800 dark:text-blue-200', icon: 'info' },
+        TIP: { class: 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20 text-emerald-800 dark:text-emerald-200', icon: 'lightbulb' },
+        IMPORTANT: { class: 'border-purple-500 bg-purple-50/50 dark:bg-purple-950/20 text-purple-800 dark:text-purple-200', icon: 'alert-circle' },
+        WARNING: { class: 'border-amber-500 bg-amber-50/50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-200', icon: 'alert-triangle' },
+        CAUTION: { class: 'border-red-500 bg-red-50/50 dark:bg-red-950/20 text-red-800 dark:text-red-200', icon: 'shield-alert' }
+      };
+      
+      return html.replace(/<blockquote>\s*<p>\s*\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\n?([\s\S]*?)<\/p>\s*<\/blockquote>/gi, (match, type, content) => {
+        const alert = alerts[type.toUpperCase()];
+        return `
+          <div class="my-6 border-l-4 p-4 rounded-r-md ${alert.class} flex items-start space-x-3 not-prose">
+            <div class="flex-shrink-0 mt-0.5"><i data-lucide="${alert.icon}" class="w-5 h-5"></i></div>
+            <div class="flex-1 text-sm leading-relaxed">
+              <strong class="block font-semibold mb-1">${type.toUpperCase()}</strong>
+              ${content.trim()}
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // Relative links rewriter
+    function rewriteRelativeLinks(html, currentPath) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      const links = doc.querySelectorAll('a');
+      
+      links.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('mailto:')) {
+          const parts = href.split('#');
+          const relPath = parts[0];
+          const anchor = parts[1] ? '#' + parts[1] : '';
+          
+          if (relPath.endsWith('.md')) {
+            const currentDir = currentPath.includes('/') ? currentPath.substring(0, currentPath.lastIndexOf('/')) : '';
+            let resolvedPath = relPath;
+            if (currentDir && !relPath.startsWith('/')) {
+              resolvedPath = currentDir + '/' + relPath;
+            }
+            
+            // Normalize path (handle .. and .)
+            const segments = resolvedPath.split('/');
+            const stack = [];
+            for (const segment of segments) {
+              if (segment === '..') {
+                stack.pop();
+              } else if (segment !== '.' && segment !== '') {
+                stack.push(segment);
+              }
+            }
+            const finalPath = stack.join('/');
+            const routeName = finalPath.replace(/\.md$/, '');
+            link.setAttribute('href', '#/' + routeName + anchor);
+          }
+        }
+      });
+      return doc.body.innerHTML;
+    }
+
+    // Table of contents generator
+    function generateTOC() {
+      tocList.innerHTML = '';
+      const headings = contentDiv.querySelectorAll('h2, h3');
+      
+      if (headings.length === 0) {
+        tocList.innerHTML = '<li class="italic text-xs text-slate-400">Tidak ada sub-heading</li>';
+        return;
+      }
+      
+      headings.forEach((heading, index) => {
+        const text = heading.innerText;
+        const id = 'heading-' + index;
+        heading.setAttribute('id', id);
+        
+        const isH3 = heading.tagName.toLowerCase() === 'h3';
+        const li = document.createElement('li');
+        li.className = `${isH3 ? 'pl-4 text-xs' : 'text-sm'} transition duration-150`;
+        
+        li.innerHTML = `
+          <a href="#${window.location.hash.split('#')[1] || ''}#${id}" class="hover:text-primary-600 dark:hover:text-primary-400 block truncate" title="${text}">
+            ${text}
+          </a>
+        `;
+        tocList.appendChild(li);
+      });
+    }
+
+    // Load file and render
+    async function loadPage() {
+      // Show Loader, Hide Content
+      loaderDiv.classList.remove('hidden');
+      contentDiv.classList.add('hidden');
+      
+      // Determine filepath from Hash Route
+      let route = window.location.hash.replace(/^#\//, '');
+      let filepath = route ? route + '.md' : 'README.md';
+      currentHashPath = filepath;
+
+      // Close mobile sidebar if open
+      if (!sidebar.classList.contains('-translate-x-full')) {
+        toggleMobileSidebar();
+      }
+
+      // Re-render sidebar to update selected state
+      renderSidebar();
+      
+      try {
+        const response = await fetch('./' + filepath);
+        if (!response.ok) {
+          throw new Error('Halaman tidak ditemukan');
+        }
+        const markdown = await response.text();
+        
+        // Parse markdown to HTML
+        let parsedHtml = marked.parse(markdown);
+        
+        // Process links and alerts
+        parsedHtml = rewriteRelativeLinks(parsedHtml, filepath);
+        parsedHtml = renderAlerts(parsedHtml);
+        
+        // Set content and highlight code blocks
+        contentDiv.innerHTML = parsedHtml;
+        
+        // Show Content, Hide Loader
+        loaderDiv.classList.add('hidden');
+        contentDiv.classList.remove('hidden');
+        
+        // Code Block Styling (Add Copy Button and Line Highlight UI)
+        contentDiv.querySelectorAll('pre').forEach(preBlock => {
+          // Wrap in a relative block for styling
+          preBlock.classList.add('group');
+          
+          // Add copy button
+          const copyButton = document.createElement('button');
+          copyButton.className = 'absolute right-3 top-3 p-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-xs flex items-center gap-1';
+          copyButton.innerHTML = '<i data-lucide="copy" class="w-3.5 h-3.5"></i>';
+          copyButton.addEventListener('click', () => {
+            const codeText = preBlock.querySelector('code').innerText;
+            navigator.clipboard.writeText(codeText).then(() => {
+              copyButton.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i>';
+              setTimeout(() => {
+                copyButton.innerHTML = '<i data-lucide="copy" class="w-3.5 h-3.5"></i>';
+                lucide.createIcons();
+              }, 2000);
+              lucide.createIcons();
+            });
+          });
+          preBlock.appendChild(copyButton);
+        });
+        
+        // Prism Highlight
+        Prism.highlightAllUnder(contentDiv);
+        
+        // Generate Table of Contents
+        generateTOC();
+        
+        // Trigger Lucide icons inside content
+        lucide.createIcons();
+        
+        // Scroll to heading if there is an anchor in the hash
+        const hashParts = window.location.hash.split('#');
+        if (hashParts.length > 2) {
+          const anchorId = hashParts[2];
+          const element = document.getElementById(anchorId);
+          if (element) {
+            setTimeout(() => {
+              element.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+          }
+        } else {
+          window.scrollTo(0, 0);
+        }
+
+      } catch (err) {
+        loaderDiv.classList.add('hidden');
+        contentDiv.classList.remove('hidden');
+        contentDiv.innerHTML = `
+          <div class="text-center py-20">
+            <div class="inline-flex p-4 bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 rounded-full mb-4">
+              <i data-lucide="alert-octagon" class="w-12 h-12"></i>
+            </div>
+            <h1 class="text-2xl font-bold mb-2">Halaman Tidak Ditemukan</h1>
+            <p class="text-slate-500 dark:text-slate-400 mb-6">Maaf, file dokumentasi yang Anda cari tidak dapat dimuat atau tidak tersedia.</p>
+            <a href="#/" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-md text-sm font-medium transition inline-flex items-center gap-2">
+              <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Beranda
+            </a>
+          </div>
+        `;
+        tocList.innerHTML = '<li class="italic text-xs">Error</li>';
+        lucide.createIcons();
+      }
+    }
+
+    // Listen for hash routing
+    window.addEventListener('hashchange', loadPage);
+
+    // Initial Load
+    renderSidebar();
+    loadPage();
+    lucide.createIcons();
+  </script>
+</body>
+</html>
