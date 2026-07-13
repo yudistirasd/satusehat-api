@@ -3,6 +3,7 @@
 namespace Satusehat\Integration\Terminology;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * Satusehat\Integration\Models\KodeWilayah.
@@ -12,8 +13,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $level
  * @property string|null $parent
  * @property string|null $state
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class KodeWilayahIndonesia extends Model
 {

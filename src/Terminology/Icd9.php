@@ -3,6 +3,7 @@
 namespace Satusehat\Integration\Terminology;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * Satusehat\Integration\Models\Icd9.
@@ -11,8 +12,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $icd9_en
  * @property string $icd9_id
  * @property bool $active
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class Icd9 extends Model
 {

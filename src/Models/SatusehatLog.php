@@ -3,6 +3,7 @@
 namespace Satusehat\Integration\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * Satusehat\Integration\Models\SatusehatLog.
@@ -13,8 +14,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property array|null $payload
  * @property array $response
  * @property string $user_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class SatusehatLog extends Model
 {
