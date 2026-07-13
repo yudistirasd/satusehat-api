@@ -3,6 +3,7 @@
 return [
 
     'enable' => env('SATUSEHAT_ENABLE', true),
+    'log' => env('SATUSEHAT_LOG', true),
     'env' => env('SATUSEHAT_ENV', 'DEV'),
     'client_id_DEV' => env('CLIENTID_DEV'),
     'client_secret_DEV' => env('CLIENTSECRET_DEV'),

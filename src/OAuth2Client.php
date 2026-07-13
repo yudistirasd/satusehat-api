@@ -207,6 +207,10 @@ class OAuth2Client
 
     public function log($resource, $id, $action, $url, $payload, $response)
     {
+        if (! config('satusehatintegration.log', true)) {
+            return;
+        }
+
         $status = new SatusehatLog;
         $status->resource_type = $resource;
         $status->response_id = $id;
