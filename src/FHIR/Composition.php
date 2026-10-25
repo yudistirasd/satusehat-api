@@ -33,7 +33,7 @@ class Composition extends OAuth2Client
 
     public function setIdentifier($identifier)
     {
-        $this->composition['identifier'][] = [
+        $this->composition['identifier'] = [
             'system' => 'http://sys-ids.kemkes.go.id/composition/' . $this->organization_id,
             'value' => $identifier,
         ];
