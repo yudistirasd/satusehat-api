@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.2.4 - 2026-10-25
+
+**Full Changelog**: https://github.com/yudistirasd/satusehat-api/compare/v2.2.3...v2.2.4
+
 ## v2.2.3 - Fitur Kontrol Logging & Otomatisasi Publikasi Wiki - 2026-07-13
 
 ### Apa yang Baru di v2.2.3? 🚀
@@ -31,11 +35,13 @@ Setelah melakukan pembaruan ke versi ini, silakan publikasikan kembali file konf
 ```bash
 php artisan vendor:publish --tag=satusehat-api-config --force
 
+
 ```
 Atau Anda cukup menambahkan baris variabel berikut di file `.env` Anda untuk menonaktifkan logging:
 
 ```env
 SATUSEHAT_LOG=false
+
 
 ```
 **Full Changelog**: https://github.com/yudistirasd/satusehat-api/compare/v2.2.3...v2.2.3
@@ -65,6 +71,7 @@ Setelah update ke versi ini, Anda **wajib** mempublikasikan file konfigurasi bar
 
 ```bash
 php artisan vendor:publish --tag=satusehat-api-config
+
 
 
 ```
@@ -456,6 +463,7 @@ class BaseController extends Controller
 
 
 
+
 ```
 v1.2.x :
 
@@ -570,6 +578,7 @@ class BaseController extends Controller
         return $ss_oauth2;
     }
 }
+
 
 
 
