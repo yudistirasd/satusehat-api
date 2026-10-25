@@ -1,8 +1,49 @@
 # Changelog
 
+## v2.2.3 - Fitur Kontrol Logging & Otomatisasi Publikasi Wiki - 2026-07-13
+
+### Apa yang Baru di v2.2.3? 🚀
+
+Rilis ini menghadirkan fitur kontrol pencatatan aktivitas logging serta sistem otomatisasi pembaruan dokumentasi ke GitHub Wiki.
+
+#### 🔌 Fitur Baru & Peningkatan (New Features)
+
+* **Kontrol Aktivitas Logging (`SATUSEHAT_LOG`)**:
+  Kini Anda dapat mengaktifkan atau menonaktifkan perekaman log integrasi SATUSEHAT ke database.
+  * Menambahkan opsi `'log' => env('SATUSEHAT_LOG', true)` di file `config/satusehatintegration.php`.
+  * Proses penyimpanan log pada `OAuth2Client::log` akan dilewati secara otomatis jika konfigurasi diatur ke `false`.
+  
+
+#### 📖 Otomatisasi Dokumentasi (Docs Automation)
+
+* **Auto-publish ke GitHub Wiki**:
+  Menambahkan GitHub Action workflow untuk menyelaraskan dan mempublikasikan isi folder `docs/` ke tab **Wiki** repositori Anda secara otomatis setiap kali ada pembaruan di branch `main`.
+  * Menggunakan skrip Python untuk meratakan (*flatten*) struktur folder dan memperbarui tautan antar-halaman secara otomatis agar tidak rusak (*broken links*) di Wiki.
+  
+
+
+---
+
+#### ⚠️ Panduan Pembaruan (Upgrade Guide)
+
+Setelah melakukan pembaruan ke versi ini, silakan publikasikan kembali file konfigurasi Anda untuk mendapatkan opsi baru (gunakan `--force` jika ingin menimpa konfigurasi lama):
+
+```bash
+php artisan vendor:publish --tag=satusehat-api-config --force
+
+```
+Atau Anda cukup menambahkan baris variabel berikut di file `.env` Anda untuk menonaktifkan logging:
+
+```env
+SATUSEHAT_LOG=false
+
+```
+**Full Changelog**: https://github.com/yudistirasd/satusehat-api/compare/v2.2.3...v2.2.3
+
 ## Unreleased - 2026-07-13
 
 ### Added
+
 - Menambahkan opsi konfigurasi `'log' => env('SATUSEHAT_LOG', true)` di `config/satusehatintegration.php` dan implementasinya di `OAuth2Client::log` untuk mengaktifkan/menonaktifkan logging aktivitas API.
 - Menambahkan GitHub Action workflow `.github/workflows/publish_wiki.yml` dan script `.github/scripts/publish_wiki.py` untuk meratakan (flatten) dan mempublikasikan dokumentasi secara otomatis dari folder `docs` ke GitHub Wiki pada saat push ke branch `main`.
 - Menambahkan [docs/index.html](file:///D:/laragon/www/satusehat-api/docs/index.html) sebagai Single Page Application (SPA) pembaca dokumentasi berbasis client-side untuk deploy langsung ke GitHub Pages (tanpa build step).
@@ -24,6 +65,7 @@ Setelah update ke versi ini, Anda **wajib** mempublikasikan file konfigurasi bar
 
 ```bash
 php artisan vendor:publish --tag=satusehat-api-config
+
 
 ```
 ## 1.0 - 2025-10-19
@@ -413,6 +455,7 @@ class BaseController extends Controller
 
 
 
+
 ```
 v1.2.x :
 
@@ -527,6 +570,7 @@ class BaseController extends Controller
         return $ss_oauth2;
     }
 }
+
 
 
 
